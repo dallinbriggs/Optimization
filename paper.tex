@@ -2,10 +2,10 @@
 
 %\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
 
-\IEEEoverridecommandlockouts                              % This command is only needed if 
+%\IEEEoverridecommandlockouts                              % This command is only needed if 
                                                           % you want to use the \thanks command
 
-\overrideIEEEmargins                                      % Needed to meet printer requirements.
+%\overrideIEEEmargins                                      % Needed to meet printer requirements.
 
 % See the \addtolength command later in the file to balance the column lengths
 % on the last page of the document
@@ -27,17 +27,15 @@
 %\usepackage{biber}
 
 \title{\LARGE \bf
-ROSflight: a Lightweight, Inexpensive MAV \protect\\ Research and Development Tool
+Awesome quad!!!
 }
 
 
-\author{James Jackson$^{1}$, Gary Ellingson$^{2}$, Tim McLain$^{3}$% <-this % stops a space
-\thanks{$^{1}$James Jackson is a MS student in the Department of Mechanical Engineering, Brigham Young University
-        {\tt\small jamesjackson@byu.edu}}%
-\thanks{$^{2}$Gary Ellingson is a MS student in the Department of Mechanical Engineering, Brigham Young University
-        {\tt\small gary.ellingson@byu.edu}}%
-\thanks{$^{3}$Tim McLain is a professor in the Department of Mechanical Engineering, Brigham Young University
-        {\tt\small mclain@byu.edu}}%
+\author{Daillin Briggs, Gary Ellingson% <-this % stops a space
+%\thanks{$^{1}$James Jackson is a MS student in the Department of Mechanical Engineering, Brigham Young University
+%        {\tt\small jamesjackson@byu.edu}}%
+%\thanks{$^{2}$Gary Ellingson is a MS student in the Department of Mechanical Engineering, Brigham Young University
+%        {\tt\small gary.ellingson@byu.edu}}%
 }
 
 
@@ -53,7 +51,7 @@ ROSflight: a Lightweight, Inexpensive MAV \protect\\ Research and Development To
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-To accelerate research and development of the autonomous capabilities of micro aerial vehicles we have developed flight control framework, ROSflight, as a research tool. ROSflight makes development of autopilot code easier and more efficient by minimizing the use of embedded systems, incorporating the Robot Operating System and using off-the-shelf and open-source hardware and software. Motivation and applications for use in the research community are discussed.  Analysis of loop rate and communication bandwidth are presented as well as results from flight demonstration of two multi-rotor aircraft. 
+Hi this is the abstract
 
 \end{abstract}
 
@@ -61,175 +59,42 @@ To accelerate research and development of the autonomous capabilities of micro a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-In recent years there has been an explosion of research and development in autonomous capabilities for both fixed wing and multirotor micro aerial vehicles (MAVs).  The use of MAVs is begin explored across many applications, such as aerial photography, surveillance, infrastructure monitoring, and package delivery. This research interest includes large technology companies, defense contractors and hobbyists, and is being enabled by widely available, inexpensive computing power and sensors.  MAVs utilize small embedded sensors and a processor in a flight control unit (FCU). The FCU performs, at the very least, attitude estimation and control and may also accomplish high-level capabilities such as GPS waypoint following or obstacle avoidance.
 
-Current MAV research is being performed in a variety of fields including robotics, computer science, and engineering and has included development of controllers, estimators, path planners, and novel sensing technologies.  In general, MAV research is accomplished by rapid iteration of ideas and techniques and demonstrated through rigorous simulation and testing.  Available MAV research tools, including hardware and software, are hard to use, not flexible, and often expensive, and therefore limit research productivity. 
 
-This paper outlines ROSflight, our unique research and development tool for MAVs. ROSflight utilizes a simple sensor and actuator board in tandem with a more powerful computer running the Robot Operating System (ROS). ROSflight enables the rapid development of novel autopilot algorithms by minimizing the use of embedded systems and by incorporating standardized robotics tools made publicly available through ROS.  By using this tool for MAV research and development, initial autopilot development cost and effort is reduced and research flexibility is enhanced.
-
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{fig/hummingbird.jpg}
-	\caption{Small quadrotor used for demonstrating ROSflight.}
-		\label{fig:hummingbird}
-\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{BACKGROUND}
-
-Many FCUs have been developed for the purpose of operating MAVs and they vary widely in both price and functionality. Common FCUs include open-source projects such as the PX4~\cite{Meier2015}, Paparazzi~\cite{Gati2013}, and PixHawk~\cite{1_ardupilot.com_2016} as well as proprietary solutions such as those by MikroKopter~\cite{4_gmbh_2016}, Ascending Technologies~\cite{2_ascending_technologies_gmbh_2016}, Parrot~\cite{3_parrot.com_2016}, Lockheed Martin Procerus~\cite{kestrel.com_2016}, Cloud Cap Technologies~\cite{piccolo.com_2016} and others.  The FCU is primarily responsible for performing attitude control and stabilization, but is also used to receive measurements from embedded sensors such as IMUs, sonars, and pressure sensors. Some FCUs are built into a larger autopilot framework which includes GPS-waypoint following, path planning functionality, and vision processing~\cite{Meier2011}.  An extensive summary of autopilots can be found in~\cite{Chao2010}.
-
-These products serve several purposes in academic research.  Some of the fully-featured autopilots are used as plug-and-play solutions for data collection and other experiments.  Others are used for developing novel guidance, navigation, control, and estimation schemes.  These latter applications often require customization of the existing code sometimes down to the level of actuation of motors and attitude stabilization.
-
-Depending on the research goals, using fully-featured FCUs in MAV research may require extensive re-building of much of the high-level functionality.  For example, GPS-denied or GPS-degraded flight requires much of the GPS-enabled FCU functionality such as position control and waypoint following to be completely re-built to accommodate changes to fundamental navigation methods.  As a result, many research experiments have been performed with an embedded FCU performing only attitude stabilization while an onboard computer does all higher-level functionality~\cite{Engel2012,Shen2011,Haines2011,Blosch2010}. 
-
-In addition to research-oriented autopilot development, the advent of first-person-view (FPV) quadcopter racing has driven advancements in FCU technology by demanding reduced weight and faster response.  The foremost among these units is the SPRacingF3~\cite{3_seriouslypro.com_2016} (see figure~\ref{fig:spracingf3}, which runs the popular, open-source cleanflight firmware~\cite{4_cleanflight.com_2016}.  This FCU successfully reduced the weight, cost, and complexity of FCUs while also achieving up to 1000~Hz attitude control loop rates with a complementary filter performing attitude estimation.  The SPRacingF3 can commonly be purchased for approximately \$60, and weighs only 6 grams, but has performance equivalent to many of its more expensive counterparts.
-
-With the FCU dedicated to performing only low-level sensor reading and attitude stabilization, the ROS framework~\cite{Quigley2009} can be leveraged to perform higher-level tasks on an onboard computer aboard the MAV. Besides having extensive driver support for robotic sensors and peripherals, ROS also comes with several useful development tools including a powerful simulator for testing code.  While these tools are often used in MAV research, they could be leveraged more easily using ROSflight and the SPRacingF3 FCU hardware. 
-
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{fig/mikey_no_prop_guard.png}
-	\caption{Large quadrotor used for demonstrating ROSflight.}
-		\label{fig:mikey}
-\end{figure}
 
 \section{MOTIVATION}
 
-While a number of commercially available FCUs currently feature high-bandwidth connections to ROS, these can be cost-prohibitive to many researchers.  These proprietary FCUs perform, particularly in attitude control, equivalently to recently developed hobby-grade FCUs that are much less expensive. Besides price, these proprietary FCUs also often embed their attitude control scheme in a way that prevents researchers from understanding the finer points of how attitude control is performed within the larger scheme of the autopilot architecture.  By using an open source FCU, this information is both available to and modifiable by the researcher, resulting in more effective architecture construction and efficient control.
-
-Other FCUs focus more on building an all-in-one solution which strives to wrap attitude control into a larger autopilot architecture.  While these solutions offer significant capability and support, often the whole autopilot is a single embedded system.  The extensive use of embedded hardware causes many challenges which can are solved by moving development into ROS.
-
-When developing embedded code, the processor used to produce and compile the code is different then the processor used to run the code.  As a result, embedded debugging often must happen through an in-circuit debugger such as a JTAG tool with limited functionality.  When compared with using a fully-featured integrated development environment and developing native software, debugging embedded programs can be time-consuming and difficult.
-
-Developing the full autopilot architecture on an embedded system also makes hardware abstraction difficult.  While attempts have been made at abstraction, including by the PixHawk project~\cite{Meier2015}, embedded systems use hardware level functions that are processor specific, and can sometimes be difficult to transfer to different processors.  As processing power continues to become lighter and more affordable, expandability is an important feature to consider when developing an autopilot architecture, but is difficult to achieve when using embedded hardware.  By implementing the autopilot architecture in ROS on a supported Linux distribution the hardware becomes completely abstracted, meaning that autopilot code is neither limited to the power of a given processor nor is it tied to a specific piece of autopilot hardware.
-
-Another benefit of the cross-compatibility of the ROS interface is that there is no discernible difference in the communication between the FCU and the onboard computer and a desktop machine.  This means that the FCU can be connected to the desktop computer during development for rapid simulation, testing and debugging, then connected to the onboard computer with less worry of the FCU communication causing problems in flight tests.
-
-Using a full-featured Linux distribution on the onboard computer also means that development can occur directly on the onboard computer.  Many of these smaller computers, such as those used in our demonstration, offer direct access to graphical user environments, standard USB connections for a mouse and keyboard and network connections.  Given this level of interaction with the onboard computer means it can be used both as the primary development machine and for in-flight control.  In addition, having a full development environment onboard means small modifications to flight control code can be compiled directly on the machine with very little downtime and no re-flashing of FCU firmware.
-
-\begin{figure}
-\centering
-  \includegraphics[width=0.2\textwidth]{fig/s-l300.jpg}
-  \caption{SPRacingF3 FCU}
-    \label{fig:spracingf3}
-\end{figure}
-
-Because experimental testing of MAVs incurs significant hardware setup and operating costs, MAV research and development effort is reduced by the leveraging of simulation tools.  When using embedded systems, the embedded hardware must either be simulated via software-in-the-loop (SIL) or used in a high-bandwidth connection with the simulator through hardware-in-the-loop (HIL).  Both of these systems, while effective, take time to set up and can be difficult to get working properly.  If instead development and execution of code occurs on a ROS system, SIL simulations are sufficient to test all but the embedded portion of code. This is possible because of the level of hardware abstraction of the Linux computer and significantly reduces the amount of HIL simulation required for properly testing development code.
+\begin{itemize}
+	\item{Why a gas quad}
+	\item{figure of current solutions}
+\end{itemize}
 
 
-\begin{figure}[hbtp]
-  \resizebox{0.5\textwidth}{!}{
-  \centering
-  \input{fig/block1}
-  }
-  \caption{Block diagram for multirotor in standard configuration using ROSflight and a Linux computer running ROS.  The FCU accepts roll, pitch, yaw rate, and throttle commands from the computer.  It controls to these commands using a PID attitude controller and complementary filter running at speeds up to 1000~Hz.  IMU can be accessed from the FCU at 150~Hz via a low-latency USB connection, which is used to run a full-state estimator on the computer, by fusing inertial measurements with GPS, visual odometry, or motion capture.}
-  \label{fig:att_block}
-\end{figure}
-
-\begin{figure}[hbtp]
-  \resizebox{0.5\textwidth}{!}{
-  \centering
-  \input{fig/block2}
-  }
-  \caption{Block diagram for multirotor in rate mode using ROSflight and a Linux computer running ROS.  The FCU accepts roll rate, pitch rate, yaw rate, and throttle commands from the computer and control to these commands using gyro measurements}
-  \label{fig:att_rate_block}
-\end{figure}
-
-\begin{figure}[hbtp]
-  \resizebox{0.5\textwidth}{!}{
-  \centering
-  \input{fig/fw_block}
-  }
-  \caption{Block diagram for a fixed-wing MAV using ROSflight and a Linux computer running ROS.  The FCU accepts thrust and aileron, elevator, and rudder deflection commands from the computer and actuates those commands, and relays IMU, sonar and other embedded sensors at 150 back to the computer.  In this configuration, the FCU acts simply as a I/O board for the computer.  All estimation runs on the computer, in combination with position sensors such as GPS.}
-  \label{fig:fw_block}
-\end{figure}
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{METHODS}
+analysis models
 
-\section{IMPLEMENTATION}
-ROSflight has been designed to leverage software developed by the open-source community and inexpensive, off-the-shelf hardware to provide a research and development tool that overcomes many of the challenges associated with other commonly used MAV FCUs. It consists of an inexpensive, embedded FCU coupled with an onboard Linux computer.  The SPRacingF3~\cite{3_seriouslypro.com_2016} is a good choice for the embedded FCU because of its very impressive performance in a small, low cost and lightweight package. The FCU's only functions are to read and filter embedded sensors, produce pule-width-modulation for actuator output, control attitude, communicate with the onboard computer and accommodate a RC safety pilot.
+Empirical engine models
+aerodynamic models
+Simplifications - we are stupid
 
-The onboard computer can be selected from a variety of options, including ARM-centric single-board computers like the ODROID or Raspberry Pi, or high powered computers with traditional Intel/AMD processors or NVIDIA Tegra.  The only fixed requirements are that the onboard computer has a USB 2.0 port and can run Linux and ROS.  This flexibility means that SWAP considerations can become the primary concern when choosing a processing platform and upgrading computation power becomes much more manageable.
+\section{OPTIMIZATION}
+Setup the formal optimization problems
 
-To enable safe testing of custom software and controllers, ROSflight integrates an RC safety pilot override into the firmware.  With this override, a safety pilot operating a radio control transmitter is able to override commands sent from the onboard computer either by moving the sticks of the transmitter or flipping a transmitter switch.  During normal operation, the onboard computer has full control of the FCU through a low-latency USB connection, and the safety pilot is able to override roll, pitch, yaw rate and thrust individually with the transmitter. In the case of emergencies, flipping the switch causes the FCU to completely ignore any autopilot commands from the computer and listen only to the manual control provided by the safety pilot.
+What optimizers, setup, comparing matlab and python. 
+figure of Pareto fronts...
 
+constraint sensitivity - aerodynamics, engine efficiencies...
 
-ROSflight is capable of performing both attitude estimation and control on board the FCU, taking roll, pitch, yaw rate, and throttle commands (see figure~\ref{fig:att_block}).  It can be easily configured to accept roll rate, pitch rate, yaw rate and throttle commands, or even direct actuator deflections if lower-level attitude stabilization and control is performed by the onboard control scheme (see figures~\ref{fig:att_rate_block} and \ref{fig:fw_block}). Sensor readings from the FCU are made available to the onboard computer via a USB connection at 150~Hz with less than 1~ms latency. 
-
-The FCU was modeled with several multirotor platforms in Gazebo for software-in-the-loop (SIL) simulation.  The simulator is very similar to the simulator developed in~\cite{Furrer2016}, and allows for simulation of cameras, laser scanners, IMUs, and environments, for both fixed wing and multirotor MAVs with the ROSflight system.  The interface to both the FCU and the simulator have been made identical, which makes transitioning from SIL simulation to hardware testing a seamless process.
- 
-By reducing the amount of embedded computing and leveraging the onboard computer for more flight tasks, the majority of code will be developed and run in an environment more conducive to testing and debugging, leaving only the critical real-time tasks to be performed by the embedded FCU with microsecond accuracy.	
-
-As mentioned before, the choice of onboard computer is only limited by the ability to run ROS.  However, to demonstrate compatibility with different processor architectures, the system was tested with two multirotors, carrying different onboard computers. The first was a modified AscTec hummingbird carrying an ODROID XU4 with an octa-core ARM processor and 2~GB of RAM (see figure~\ref{fig:hummingbird}). The second was a larger quadcopter carrying a Gigabyte BRIX onboard computer with an Intel i7 and 16~GB of RAM (see figure~\ref{fig:mikey}).  
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Analysis}
-
-A simple analysis of bandwidth and control loop times shows that stable and accurate flight is possible for a MAV configuration using ROSflight tools.  
-
-For multirotors at the lowest level, motor commands to standard multirotor motor controllers are limited to occur at less than 400~Hz.  ROSflight, along with several other proprietary FCUs, supports special controllers with motor update rates up to 1000~Hz, which is required for multirotors with very small propellers during extremely aggressive maneuvers. Many FCUs, however, perform onboard estimation at approximately 250~Hz due to computational constraints (see table~\ref{table:mr_loop_rates}), and have demonstrated sufficiently fast response for many applications.
-
-Since ROSflight is capable of relaying IMU messages to the onboard computer at 150~Hz, a full-state extended Kalman filter (EKF) can run on the onboard computer at 150~Hz, while the complementary filter on the FCU can execute attitude commands under feedback at the faster 1000~Hz.  This coupling of estimation and control between the onboard computer and FCU results in a fast response and accurate execution of commands and an observable full-state estimate onboard.  Drift in the FCU's internal attitude estimate is corrected with feedback from the EKF.
-
-Fixed wing MAVs, in general, are much less dynamic than multirotors and have slower response frequencies, meaning they are less sensitive to bandwidth concerns.  This can be observed by considering the inner-loop rates of popular fixed-wing autopilots, such as those shown in table~\ref{table:fw_loop_rates}, that are much lower than those of the multirotor FCUs.  With sensor information available at 150~Hz the onboard EKF is able to achieve similar performance as these established fixed-wing autopilots.
-
-
-\begin{table}
-\centering
-\begin{tabulary}{0.5\textwidth}{|C|C|C|C|C|C|}
-\hline
-       & Kestrel & MicroPilot & PixHawk & ROSFlight \\ \hline
-  Loop Rate (Hz) & 100 & 30 & 250 & 150 \\ \hline
-\end{tabulary}
-\caption{comparison of inner control loop rates among several fixed-wing MAV FCUs}
-\label{table:fw_loop_rates}
-\end{table}
-
-
-
-\begin{table}
-\centering
-\begin{tabulary}{0.5\textwidth}{|C|C|C|C|C|C|}
-\hline
-       & PX4 & PixHawk & AscTec  & ROSFlight \\ \hline
-  Loop Rate (Hz) & 250 & 250 &  1000 & 1000 \\ \hline
-\end{tabulary}
-\caption{comparison of inner control loop rates among several multirotor MAV FCUs}
-\label{table:mr_loop_rates}
-\end{table}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{RESULTS}
-
-\begin{table}
-\centering
-  \begin{tabulary}{0.5\textwidth}{|C|C|C|C|}
-  \hline
-  message type & message size (bytes) & avg trip time (ms) & max trip time (ms) \\ \hline
-  Commands     & 36                   & 0.117             & 0.2               \\ \hline
-  IMU          & 22                   & 0.115             & 0.19              \\ \hline
-  \end{tabulary}
-  \caption{latency test results for ROSflight}
-  \label{table:latency_results}
-\end{table}
-
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{fig/hummingbird_att.eps}
-	\includegraphics[width=0.5\textwidth]{fig/hummingbird_vel.eps}
-	\caption{Position, velocity, and attitude estimates and true state plotted as a function of time for a small multirotor MAV.}
-		\label{fig:hummingbird_results}
-\end{figure}
-
-Communication latency between the FCU and onboard computer was tested by sending commands to the FCU where they were registered and then requested from the FCU and returned. The send and request cycle was performed at 200~Hz.  This task required the FCU to record the incoming command, receive a request for its return, and send it, while also operating the control loops at full rate.  Because response rates may vary slightly due to the order of higher-priority routines in the FCU, 10,000 cycles were performed and the average and maximum cycle times were recorded. IMU sensor measurement latency was tested by similarly sending and immediately requesting a message of the same size as the IMU message.  Results for both test are summarized in table~\ref{table:latency_results}.  Because I$^2$C communication to the IMU is higher priority than the USB connection to the onboard computer, it can be assumed that actual IMU latency is lower than what was recorded in this test.
-
-Besides IMU, ROSflight supports measurements from a magnetometer, a differential pressure sensor, a barometer and a sonar.  Because these sensors are used to measure much slower dynamics than accelerometer and gyroscope readings and because total communication bandwidth is limited, these sensors have been integrated and tested at 20~Hz with IMU readings at 150~Hz.  These speeds are are adjustable if required. GPS, cameras, laser scanners and other more complicated sensors used in full state estimation can be connected directly to the onboard computer with a standard USB connections.
-
-Both multirotors shown in figures~\ref{fig:hummingbird} and~\ref{fig:mikey} were flown in a motion capture room under manual control.  An EKF was implemented on the onboard computer on both MAVs which estimated the position, velocity and attitude of the MAV as well as biases for the accelerometer $x$ and $y$ axes as well as biases for all three gyroscope axes.  A motion capture system was used to provide position measurements that were fused with IMU for full-state estimation. The estimates for velocity and attitude for the smaller quadrotor flight have been plotted alongside their respective motion capture measurements in figure~\ref{fig:hummingbird_results}. As can be seen from the results, estimates were able to track effectively throughout the flight.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{CONCLUSION}
-ROSflight is a new research tool that enables rapid development and testing of autopilot code for MAVs.  It leverages hardware and software developed by the open-source community to enable accurate attitude estimation and control with a high-bandwidth, low-latency connection to ROS.  While some of these features exist in current solutions, ROSflight provides state-of-the-art performance for a fraction of the cost of these other solutions while also providing extensive flexibility in platform and onboard computer choice.
+
+lots of really good conclusions
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section*{APPENDIX}
