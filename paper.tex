@@ -47,7 +47,7 @@ Multi-dimensional Optimization of Gasoline-fueled Variable Pitch Multirotor Airc
 }
 
 
-\author{Daillin Briggs, Gary Ellingson% <-this % stops a space
+\author{Dallin Briggs, Gary Ellingson% <-this % stops a space
 %\thanks{$^{1}$James Jackson is a MS student in the Department of Mechanical Engineering, Brigham Young University
 %        {\tt\small jamesjackson@byu.edu}}%
 %\thanks{$^{2}$Gary Ellingson is a MS student in the Department of Mechanical Engineering, Brigham Young University
@@ -75,7 +75,14 @@ Currently, there are numerous multirotor UAVs that are available commercially an
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-This paper looks at the why and how we are going to optimize a multirotor platform to maximize flight time 
+\begin{itemize}
+	\item{This paper looks at the why and how we are going to optimize a multirotor platform to maximize flight time.}
+	\item{Talk about how the variables that are going to be optimized are rotor radius, fuel consumption rate, number of blade per rotor, number of rotors, rotor speed, and rotor pitch.}
+	\item{Talk about why these variables were selected as design variables.}
+	\item{Talk about some physical constraints, especially those imposed by the FAA.}
+\end{itemize}
+
+
 
 
 
@@ -85,7 +92,12 @@ This paper looks at the why and how we are going to optimize a multirotor platfo
 
 Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very good and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for Lithium-Polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potential fly much longer than a battery powered multirotor because it can carry more energy onboard. 
 
-(Will talk more about some of the details this entails in the paper).
+\begin{itemize}
+	\item{Will talk more about some of the details using a gas engine entails in the paper.}
+	\item{Speak briefly on the reasons for requiring variable pitch with a gas engine.} 
+	\item{Speak on current platforms and capabilities and explain how this could fundamentally change the way multirotors are used in commercial applications, but not really for consumers.}
+\end{itemize}
+
 
 \begin{figurehere}
 	\begin{center}
@@ -95,12 +107,12 @@ Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polyme
 	\end{center}
 \end{figurehere}
 
-
-
-
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
+
+First model used in the beginning of the project was 
+$$t_{flight} = \frac{E_{cap} \eta_{engine}}{n_{rotors}P_{adj}},$$
 
 \begin{itemize}
 	\item{Analysis models}
