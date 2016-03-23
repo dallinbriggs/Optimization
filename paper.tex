@@ -37,6 +37,11 @@
   {}
 \makeatother
 
+\newcommand{\vect}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\mat}[1]{\ensuremath{\mathbf{#1}}}
+\newcommand{\transpose}{\ensuremath{\mathsf{T}}}
+\newcommand{\of}[1]{\ensuremath{\left(#1\right)}}
+
 \title{\LARGE \bf
 Multi-dimensional Optimization of Gasoline-fueled Variable Pitch Multirotor Aircraft
 }
@@ -96,19 +101,42 @@ Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polyme
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
-analysis models
 
-Empirical engine models
-aerodynamic models
-Simplifications - we are stupid
+\begin{itemize}
+	\item{Analysis models}
+	\begin{itemize}
+		\item{Empirical engine models}
+		\item{Rotor Aerodynamic models}
+	\end{itemize}
+	\item{Simplifications - since we are stupid}
+\end{itemize}
 
 \section{OPTIMIZATION}
-Setup the formal optimization problems
+Setup the formal optimization problem
+\begin{equation}
+min. \quad f\of{x} = -flightTime\of{x}
+\label{eq:objective}
+\end{equation}
+\begin{equation}
+w.r.t. \quad x = [variables]^T
+\label{eq:vars}
+\end{equation}
+\begin{equation}
+s.t. \quad cons\of{x} <= 0 
+\label{eq:constrants}
+\end{equation}
 
 What optimizers, setup, comparing matlab and python. 
-figure of Pareto fronts...
+
+Figure of Pareto fronts...
 
 constraint sensitivity - aerodynamics, engine efficiencies...
+
+\section{RESULTS AND DISCUSSION}
+
+\begin{itemize}
+	\item{Table showing the optimal design parameters}
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
