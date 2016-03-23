@@ -13,6 +13,7 @@
 % The following packages can be found on http:\\www.ctan.org
 \usepackage{graphics} % for pdf, bitmapped graphics files
 \usepackage{epsfig} % for postscript graphics files
+\usepackage{graphicx}
 \usepackage{mathptmx} % assumes new font selection scheme installed
 \usepackage{times} % assumes new font selection scheme installed
 \usepackage{mathtools} % assumes amsmath package installed
@@ -26,8 +27,18 @@
 \usetikzlibrary{calc,positioning, fit, arrows}
 %\usepackage{biber}
 
+\makeatletter
+\newenvironment{tablehere}
+  {\def\@captype{table}}
+  {}
+
+\newenvironment{figurehere}
+  {\def\@captype{figure}}
+  {}
+\makeatother
+
 \title{\LARGE \bf
-Awesome quad!!!
+Multi-dimensional Optimization of Gasoline-fueled Variable Pitch Multirotor Aircraft
 }
 
 
@@ -51,7 +62,7 @@ Awesome quad!!!
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-Hi this is the abstract
+Currently, there are numerous multirotor UAVs that are available commercially and to consumers that are capable of lifting small payloads for an endurance of approximately 30 minutes. While these current multirotors are good for short endurance missions, there are few options for larger, higher payload capacity multirotors that are able to maintain flight for longer than an hour. This paper describes the optimization process used to develop a multirotor platform that maximizes the flight time of a gasoline-fueled multirotor UAV by varying several design variables related to the power required and the aerodynamics of the model.
 
 \end{abstract}
 
@@ -59,6 +70,7 @@ Hi this is the abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
+This paper looks at the why and how we are going to optimize a multirotor platform to maximize flight time 
 
 
 
@@ -66,10 +78,19 @@ Hi this is the abstract
 
 \section{MOTIVATION}
 
-\begin{itemize}
-	\item{Why a gas quad}
-	\item{figure of current solutions}
-\end{itemize}
+Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very good and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for Lithium-Polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potential fly much longer than a battery powered multirotor because it can carry more energy onboard. 
+
+(Will talk more about some of the details this entails in the paper).
+
+\begin{figurehere}
+	\begin{center}
+		\includegraphics[width=.40\textwidth]{current_capabilities.jpg}
+		\caption{\textit{Graphic showing current platforms and how our would be better.}}
+		\label{current_cap}
+	\end{center}
+\end{figurehere}
+
+
 
 
 	
