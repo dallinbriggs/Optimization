@@ -224,6 +224,8 @@ Please see \cite{chen1979simplified} for definition of terms. Although this mode
 
 \section{OPTIMIZATION}
 
+Our design variables are rotor radius, fuel consumption rate, number of blades per rotor, number of rotors, rotor speed, and rotor pitch. Rotor radius and number of blades per rotor, and number of rotors were chosen because this is an easy parameter to vary on multirotors due to the availability of numerous rotor blades available for small rotor aircraft. These variables also have a large influence on the flight time of the multirotor. Rotor speed and rotor pitch were chosen because these variables are easy to change on the physical system through selecting the proper gearing ratios. Fuel consumption rate seems like an odd variable for an optimizer because intuitively an optimizer would just minimize this value to maximize the flight time; however, fuel consumption rate is constrained by the size of engine required to produce the amount of power needed to provide enough lift for the multirotor. All of these design variables, however, have bound constraints that keep them in a reasonable space of commercially available parts/performance.
+
 Setup the formal optimization problem
 \begin{equation}
 min. \quad f\of{x} = -flightTime\of{x}
