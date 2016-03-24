@@ -86,15 +86,15 @@ Currently, there are numerous multirotor UAVs that are available commercially an
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
-Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a variable pitch quad commercially available \cite{stingray2016}.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}.
+Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a small, electric variable pitch quad commercially available \cite{stingray2016}.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}.
 
-In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a large payload. 
+In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a relatively large payload. 
 
 There are many commercially available parts for a gas quad, including engines and variable pitch helicopter propellers. 
 
 \section{MOTIVATION}
 
-Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very good and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for Lithium-Polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potential fly much longer than a battery powered multirotor because it can carry more energy onboard. 
+All commercial and consumer multirotor UAVs are powered by Lithium-Polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very good and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for Lithium-Polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potential fly much longer than a battery powered multirotor because it can carry more energy onboard. 
 
 \begin{itemize}
 	\item{Will talk more about some of the details using a gas engine entails in the paper.}
@@ -228,7 +228,7 @@ Our design variables are rotor radius, fuel consumption rate, number of blades p
 
 Setup the formal optimization problem
 \begin{equation}
-min. \quad f\of{x} = -flightTime\of{x}
+min. \quad f\of{x} = -t_{flight}\of{x}
 \label{eq:objective}
 \end{equation}
 \begin{equation}
@@ -236,7 +236,7 @@ w.r.t. \quad x = [variables]^T
 \label{eq:vars}
 \end{equation}
 \begin{equation}
-s.t. \quad cons\of{x} <= 0 
+s.t. \quad cons\of{x} \leq 0 
 \label{eq:constrants}
 \end{equation}
 
@@ -244,18 +244,17 @@ Flight time was calculated by
 \begin{equation}
 	t_{flight} = K_{energy}*f_{capacity}/f_{rate}.
 \end{equation}
-Without constraints, the solution to maximizing flight time would be trivial and impossible. To optimize the system we use the constraints on the power produced ($P_{prod}$), power required ($P_{req}$), thrust produced ($T_{prod}$), and lift required ($T_{req}$) all had to be calculated to make sure that the rotor radius had a relationship to the fuel consumption rate. 
+Without constraints, the solution to maximizing flight time would be trivial to calculate as well as impossible to construct. Therefore to optimize the system we must use constraints that ensure the quad is feasible. The constrains are on the power produced by the engine ($P_{prod}$), power required by the prop ($P_{req}$), thrust produced by the prop ($T_{prod}$), lift required by the quad ($T_{req}$) and maximum power capabilities of the engine ($P_{max}$). Where $P_{preq} \leq P_{prod}$, $T_{req} \leq T_{prod}$, and $P_{prod} \leq P_{max}$.
 
 We then will discuss the following:
 \begin{itemize}
 	\item{scaling of the design variables}
 	\item{how we got gradients}
 	\item{the optimization method that we utilized}
+	\item{python vs matlab benefits and challenges}
 \end{itemize}
 
-So far our problem has been implemented both in python and in matlab.  Here we can talk about the benefits and challenges of using each. 
-
-Since we can only optimize for maximum flight time give a payload (parameter) we can further explore how the characteristics of a gas quad change as we optimize the flight time for different payloads. It may turn out that the optimal quad parameters change greatly as it is optimized for different flight times.  In this case we could choose several payloads and optimize over all of then together. \textit{We will present these results with a figure and some discussion.}
+Since we can only optimize for maximum flight time give a payload (parameter) we can further explore how the characteristics of a gas quad change as we optimize the flight time for different payloads. It may turn out that the optimal quad parameters change greatly as it is optimized for different payload.  In this case we could choose several payloads and optimize over all of then together. \textit{We will present these results with a figure and some discussion.}
 
 \begin{figurehere}
 	\includegraphics[width=0.5\textwidth]{payload.jpg}
@@ -263,8 +262,7 @@ Since we can only optimize for maximum flight time give a payload (parameter) we
 		\label{fig:payload}
 \end{figurehere}
 
-
-Here we can do some discussion on constraint sensitivity - aerodynamics, engine efficiencies...
+%Here we can do some discussion on constraint sensitivity - aerodynamics, engine efficiencies...
 
 \section{RESULTS AND DISCUSSION}
 
