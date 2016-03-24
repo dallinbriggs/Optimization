@@ -83,9 +83,6 @@ Currently, there are numerous multirotor UAVs that are available commercially an
 \end{itemize}
 
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
@@ -118,8 +115,55 @@ Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polyme
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
 
-First model used in the beginning of the project was 
-$$t_{flight} = \frac{E_{cap} \eta_{engine}}{n_{rotors}P_{adj}},$$
+Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks.
+
+First model used in the beginning of the project used a simplified version of Momentum theory and actuator disk theory from \cite{helicopters2016}. This model took into account the number of rotors, the rotor radius, the disc loading of each rotor, and how much fuel was available onboard the aircraft. However, this model did not take into account the blade speed, blade pitch angle, or the number of blades per rotor. The model did, however, give us a baseline for initial optimization results.
+
+Second model used to develop the optimization framework for this project was based on an MIT lecture given on aircraft propeller performance given in \cite{mit2016}. In order to test the theory of this model and also to further the progress of the optimization model, only two of the design variables were chosen to optimize: rotor radius and fuel consumption rate, $f_{rate}$. Flight time was then calculated by 
+\begin{equation}
+	t_{flight} = f_{capacity}/f_{rate}.
+\end{equation}
+This allowed for a very easy calculation in which to test the optimization technique. Without constraints, the solution to maximizing flight time would be trivial. To properly use the constraints, power produced ($P_{prod}$), power required ($P_{req}$), thrust produced ($T_{prod}$), and thrust required ($T_{req}$) all had to be calculated to make sure that the rotor radius had a relationship to the fuel consumption rate. These calculations used some approximations in the rotor dynamics. The following calculations come from a MIT lecture on thermodynamics.
+
+In order to calculate thrust of each rotor blade, the thrust has to be calculated differentially along the blade because of the angular velocity. The differential thrust is given by 
+\begin{equation}
+	dT = dLcos(\phi + \alpha_i) - dDsin(\phi + \alpha_i)
+\end{equation}
+
+where $\phi = \tan^{-1}(\frac{V_i}{V_n})$, and $\alpha_i = \theta - \tan^{-1}(\frac{V_i}{V_n})$ and $\theta$ is the blade pitch angle (held constant in this case of the optimization). $dL$ and $dD$ are the differentials of the lift and drag, respectively, and are given by
+\begin{equation}
+	dL = \frac{1}{2}\rho V_e^2 c C_l dr
+\end{equation}
+
+and 
+
+\begin{equation}
+	dD = \frac{1}{2}\rho V_e^2 c C_d dr.
+\end{equation}
+
+The coefficients of lift and drag were held constant at $C_l = 0.5438$ and $C_d = 0.0141$ (obtained from a symmetric airfoil pitch at $\alpha = 5$ degrees). Splitting the rotor into 10 sections and integrating seemed to give a reasonable estimate to the thrust produced by each rotor. This was then constrained by making sure the thrust produced was greater than or equal to the thrust required, which was
+\begin{equation}
+	T_{req} = AUW\times g.
+\end{equation}
+
+In order to make sure that enough power was being produced by the engine (and prevent the fuel consumption rate to going to 0), the power produced was given by 
+\begin{equation}
+	P_{prod} = f_{rate}E_{\rho f} \eta_{engine}
+\end{equation}
+
+and was made sure that it was greater than or equal to the power required. To calculate the power required, the torque required to turn each rotor was calculated differentially by the equation
+\begin{equation}
+	dQ = r[dLsin(\phi + \alpha_i) + dDcos(\phi + \alpha_i)].
+\end{equation}
+
+The power required was then calculated by 
+\begin{equation}
+	P_{req} = \omega_rQ_{req}2n_{rotors}.
+\end{equation}
+
+This model did converge to an optimal solution when executed with gradient based optimization methods discussed in the next section. However, in this model, not all of the design variables were implemented due to the complexity these additional variables brought to the calculus in this method.
+
+The third model used to try to represent the aerodynamics of each rotor blade was 
 
 \begin{itemize}
 	\item{Analysis models}
