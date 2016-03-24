@@ -90,7 +90,7 @@ Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler
 
 In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a large payload. 
 
-There are many commercially available parts for a gas quad, including motors 
+There are many commercially available parts for a gas quad, including engines and variable pitch helicopter propellers. 
 
 \section{MOTIVATION}
 
@@ -114,6 +114,22 @@ Almost all commercial and consumer multirotor UAVs are powered by Lithium-Polyme
 	
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
+
+Because the quad is going to be build using commercially available off the shell parts the optimization must be closely based on reality.  Ultimately that means we only can pick the size of engine that we are going to use.  All the other data about the engine (mass, maximum power, etc.) have to be a function of displacement size.  We collected data about popular two stroke RC aircraft engines from several sources to produce the below plots. 
+
+\begin{figurehere}
+	\includegraphics[width=0.5\textwidth]{mass.png}
+	\caption{Stand in figure showing the data used to obtain the empirical based surrogate model of engine mass as a function of displacement size.}
+		\label{fig:mass}
+\end{figurehere}
+
+\begin{figurehere}
+	\includegraphics[width=0.5\textwidth]{max_power.png}
+	\caption{Stand in figure showing the data used to obtain the empirical based surrogate model of engine maximum power as a function of displacement size.}
+		\label{fig:power}
+\end{figurehere}
+
+The engine efficiency (friction and heat transfer losses), however, is a function of power capability of the engine (max power) and the power engine is required to produce.  For this we will need a better model.  \textit{We are still working on this. Since efficiency numbers for RC engines aren't publicly available, we need a scientific model.  For now we just assume a constant efficiency. We plan to work on this in the future.} 
 
 Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks.
 
@@ -165,16 +181,9 @@ This model did converge to an optimal solution when executed with gradient based
 
 The third model used to try to represent the aerodynamics of each rotor blade was 
 
-\begin{itemize}
-	\item{Analysis models}
-	\begin{itemize}
-		\item{Empirical engine models}
-		\item{Rotor Aerodynamic models}
-	\end{itemize}
-	\item{Simplifications - since we are stupid}
-\end{itemize}
 
 \section{OPTIMIZATION}
+
 Setup the formal optimization problem
 \begin{equation}
 min. \quad f\of{x} = -flightTime\of{x}
