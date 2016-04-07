@@ -18,6 +18,7 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
 #    n_rotors        number of 2 blade rotors  !!!! this is a discrete variable that can't be dealt with yet but could be later
 #    payload         mass of the payload (kg)
 #    frame           mass of the frame (kg) !!!! this could be calulated from all up weight and radius of the rotor
+    frame = 4.22659612552*R_rotor
 #    rho_air         air density (kg/m^3)
 #    E_rhof          energy density of fuel (Joules/kg)
 #    n_engine        efficiency of the engine !!!! this is a param for now but could be calculated from an engine model
@@ -53,8 +54,10 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
 
         sigma_a = (1 + exp(-(M*(alpha - alpha0))) + exp((M*(alpha + alpha0))))/((1 + exp(-(M*(alpha - alpha0))))*(1 + exp((M*(alpha + alpha0))))) # to model stall
         CL_a = (1 - sigma_a)*(CL_0 + CL_alpha*alpha) + sigma_a*(2*np.sign(alpha)*pow(sin(alpha),2.0)*cos(alpha))
+#        CL_a = (1 - sigma_a)*(-98.031*alpha**3 + 0.9481*alpha**2 + 8.2078*alpha - 0.009) + sigma_a*(2*np.sign(alpha)*pow(sin(alpha),2.0)*cos(alpha))
         AR = 2*R_rotor/c_rotor
         CD_a = CD_p + ((pow((CL_0 + CL_alpha*(alpha)),2.0))/(3.14159*0.9*AR))
+#        CD_a = 51.031*alpha**4 - 0.9405*alpha**3 - 0.5316*alpha**2 + 0.0191*alpha + 0.0168
 
 #        differential drag and lift
         dL = 0.5*rho_air*(Ve**2)*c_rotor*CL_a*dr
@@ -95,7 +98,7 @@ def obj_func(x):
     theta_hover = theta_hover*3.14159/180 # to rad
 
     n_rotors = 6
-    payload = 3.0
+    payload = 6.0
     frame = 2.0
     rho_air = 1.225
     E_rhof = 44.4e6

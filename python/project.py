@@ -21,7 +21,7 @@ if __name__ == '__main__':
     x0 = scale([eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover])
 
     lb = [0, 0, 0, 0, 0, 0, 0]
-    ub = scale([1200.0, 1.0, 7500.0, 1.0, 0.1, 12.0, 30.0])
+    ub = scale([1200.0, 1.0, 7500.0, 3.0, 0.1, 12.0, 30.0])
 
 #    print obj_func_print(x0)
 
