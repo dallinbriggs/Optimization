@@ -15,13 +15,14 @@ if __name__ == '__main__':
     fuel_rate = .02 # kg/s
     omega_r = 1500 # rpm
     R_rotor = 0.705 # m
-    c_rotor = 0.05 # m
     fuel_cap = 1.0 # kg
     theta_hover = 20 # deg
-    x0 = scale([eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover])
+    x0 = scale([eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover])
+    x0 = [ 4.3441622,   0.16620041,  0.10885692,  2.78460696,  6.76453586, 0.85782237]
+    x0 = [ 4.61280557,  0.17376677,  0.08200489,  3.4691025,   7.32432873, 0.86800068]
 
-    lb = [0, 0, 0, 0, 0, 0, 0]
-    ub = scale([1200.0, 1.0, 7500.0, 3.0, 0.1, 12.0, 30.0])
+    lb = [0, 0, 0, 0, 0, 0]
+    ub = scale([1200.0, 1.0, 7500.0, 3.0, 12.0, 30.0])
 
 #    print obj_func_print(x0)
 
@@ -30,9 +31,6 @@ if __name__ == '__main__':
 #    optimizer.setOption('maxGen', 200)
 
     xopt, fopt, info = optimize(obj_func, x0, lb, ub, optimizer)
-    print 'SNOPT:', fopt, info
+    print 'SNOPT:', xopt, fopt, info
 
     out = obj_func_print(xopt)
-
-
-

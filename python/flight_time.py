@@ -4,7 +4,7 @@ from math import sqrt, exp, sin, cos, pi
 
 prt = False
 
-def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine):
+def flight_time(eng_displace, fuel_rate, omega, R_rotor, f_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine):
 
 #    --- design variables ---
 #    eng_displace    engine displacement (cubic centemeter)
@@ -12,6 +12,7 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
 #    omega           angular velocity of the rotor (rad/s)
 #    R_rotor         rotor radius (meters)
 #    c_rotor         cord of the rotor (meters)
+    c_rotor = 0.09*R_rotor
 #    f_cap           fuel capacity (liters)
 #    theta_hover     pitch angel of the blade in hover (rad)
 #    --- parameters ---
@@ -28,6 +29,88 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
     P_max = -0.0454790393518*eng_displace**2 + 79.5042893755*eng_displace #max power (W) as a function of displacment, best fit linear quadradic
     W_f = f_cap*.75                            #Fuel mass (kg)
     AUW = W_motor + W_f + frame + payload      #All up mass in kg (about 52 lbs)
+
+
+    T, Q = simple_aero_model(AUW, omega, R_rotor, c_rotor, theta_hover, rho_air, n_rotors)
+#    T, Q = other_aero_model(omega, R_rotor, c_rotor, theta_hover, rho_air, n_rotors)
+#    T, Q = nasa(2.0, R_rotor, omega, n_rotors, theta_hover, AUW, rho_air)
+
+    PowerRequired = 8*Q*omega
+    PowerProduced = fuel_rate*E_rhof*n_engine
+    c = np.array([PowerProduced - PowerRequired, T - AUW*9.8 , P_max - PowerProduced, 25 - AUW])
+    global prt
+    if prt == True:
+        print 'PP', PowerProduced
+        print 'PR', PowerRequired
+        print 'T', T
+        print 'weight', AUW*9.8
+        print 'Pmax',P_max
+        print 'MASS', AUW
+    FT = W_f/fuel_rate
+    dft_dx = np.array([0, -W_f/(fuel_rate**2), 0, 0, 0, .75, 0])
+#    dft_dx = np.array([-W_f/(fuel_rate**2), 0, 0])
+    return FT, c, dft_dx, []
+
+def obj_func(x):
+
+    eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover = unscale(x)
+
+    omega_r = omega_r*2*3.14159/60 # to rad/s
+    theta_hover = theta_hover*3.14159/180 # to rad
+
+    n_rotors = 6
+    payload = 1.0
+    frame = 2.0
+    rho_air = 1.225
+    E_rhof = 44.4e6
+    n_engine = 0.15
+
+    ft, c, dft_dx, dc_dx = flight_time(eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine)
+    return -ft, -c
+
+def obj_func_print(x):
+
+    global prt
+    prt = True
+    ft, c = obj_func(x)
+    prt = False
+
+    eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover = unscale(x)
+
+    print 'displacement (cc)',eng_displace
+    print 'fuel rate (kg/s)',fuel_rate
+    print 'angular velocity of the rotor (rpm)',omega_r
+    print 'Rotor radius (m)',R_rotor
+    print 'fuel capacity (kg)',fuel_cap
+    print 'theta_hover (deg)',theta_hover
+    print 'flight time (min)',-ft/60.0
+    return ft, c
+
+def scale(x):
+    eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover = x
+
+    eng_displace = eng_displace/80.0
+    fuel_rate = fuel_rate/.02
+    omega_r = omega_r/1500.0
+    R_rotor = R_rotor/0.705
+    fuel_cap = fuel_cap
+    theta_hover = theta_hover/20
+
+    return [eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover]
+
+def unscale(x):
+    eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover = x
+
+    eng_displace = eng_displace*80.0
+    fuel_rate = fuel_rate*.02
+    omega_r = omega_r*1500.0
+    R_rotor = R_rotor*0.705
+    fuel_cap = fuel_cap
+    theta_hover = theta_hover*20
+
+    return [eng_displace, fuel_rate, omega_r, R_rotor, fuel_cap, theta_hover]
+
+def simple_aero_model(AUW, omega, R_rotor, c_rotor, theta_hover, rho_air, n_rotors):
 
 #    --- first find a induced air velocity ---  !!! this is an assumption that we will need to improve later
     T = AUW*9.8/n_rotors                       #Thrust required
@@ -54,10 +137,8 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
 
         sigma_a = (1 + exp(-(M*(alpha - alpha0))) + exp((M*(alpha + alpha0))))/((1 + exp(-(M*(alpha - alpha0))))*(1 + exp((M*(alpha + alpha0))))) # to model stall
         CL_a = (1 - sigma_a)*(CL_0 + CL_alpha*alpha) + sigma_a*(2*np.sign(alpha)*pow(sin(alpha),2.0)*cos(alpha))
-#        CL_a = (1 - sigma_a)*(-98.031*alpha**3 + 0.9481*alpha**2 + 8.2078*alpha - 0.009) + sigma_a*(2*np.sign(alpha)*pow(sin(alpha),2.0)*cos(alpha))
         AR = 2*R_rotor/c_rotor
         CD_a = CD_p + ((pow((CL_0 + CL_alpha*(alpha)),2.0))/(3.14159*0.9*AR))
-#        CD_a = 51.031*alpha**4 - 0.9405*alpha**3 - 0.5316*alpha**2 + 0.0191*alpha + 0.0168
 
 #        differential drag and lift
         dL = 0.5*rho_air*(Ve**2)*c_rotor*CL_a*dr
@@ -73,116 +154,48 @@ def flight_time(eng_displace, fuel_rate, omega, R_rotor, c_rotor, f_cap, theta_h
     T = n_rotors*2*T
     Q = n_rotors*2*Q
 
-#    T, Q = nasa(2.0, R_rotor, omega, n_rotors, theta_hover, AUW, rho_air)
+    return T, Q
 
-    PowerRequired = 8*Q*omega
-    PowerProduced = fuel_rate*E_rhof*n_engine
-    c = np.array([PowerProduced - PowerRequired, T - AUW*9.8 , P_max - PowerProduced])
-    global prt
-    if prt == True:
-        print 'PP', PowerProduced
-        print 'PR', PowerRequired
-        print 'T', T
-        print 'W', AUW*9.8
-        print 'Pmax',P_max
-    FT = W_f/fuel_rate
-    dft_dx = np.array([0, -W_f/(fuel_rate**2), 0, 0, 0, .75, 0])
-#    dft_dx = np.array([-W_f/(fuel_rate**2), 0, 0])
-    return FT, c, dft_dx, []
+def other_aero_model(omega, R_rotor, c_rotor, theta, rho_air, n_rotors):
 
-def obj_func(x):
+    a = 0.1091              # Lift curve slope for naca 0012
+    T = 0
+    Q = 0
+    V_c = 0                 #vertical velocity
+    N = 2                   #number of blades
 
-    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = unscale(x)
+    m = 10 # stations...
+    for i in range(m + 1)[1:]:
+        dr = R_rotor/m
+        r = i*R_rotor/m - .5*R_rotor/m
+        s = N*c_rotor/3.14159*r
+        phi = 1/16*(-sqrt(a)*sqrt(s)*sqrt(a*s + 32*theta) - a*s) #atan(U_P/U_T)          # Small angle approximation because U_P << U_T.
+        alpha = theta - phi
+        C_l = -98.031*alpha**3 + 0.9481*alpha**2 + 8.2078*alpha - 0.009          # Lift coefficient based on Xfoil data.
+        C_d = 51.031*alpha**4 - 0.9405*alpha**3 - 0.5316*alpha**2 + 0.0191*alpha + 0.0168   # Drag coefficient based on xfoil data.
+        t_c = C_l/6
+        if t_c < 0:
+            t_c = 0
+        lambda_i = sqrt(s*t_c/2)
+        v_i = omega*r*lambda_i
+        U_T = omega*r          # Tangential component of velocity.
+        U_P = V_c + v_i          # Perpendicular component of velocity.
 
-    omega_r = omega_r*2*3.14159/60 # to rad/s
-    theta_hover = theta_hover*3.14159/180 # to rad
+        L = .5*rho_air*c_rotor*a*(U_T**2*theta - U_P*U_T)
+        D = .5*rho_air*U_T**2*c_rotor*C_d
+#        dT = N*L*dr
+        dT = .5*rho_air*a*N*omega**2*c_rotor*(theta - phi)*r**2*dr
+#        dQ = N*(L*phi+D)*r*dr
+#        dQ = .5*rho_air*omega**2*r**3*c_rotor*(C_d + phi*C_l)*dr
+        dQ = .5*rho_air*omega**2*r**3*c_rotor*(C_d + phi*C_l)*dr
+        T += dT
+        Q += dQ
 
-    n_rotors = 6
-    payload = 6.0
-    frame = 2.0
-    rho_air = 1.225
-    E_rhof = 44.4e6
-    n_engine = 0.15
-
-    ft, c, dft_dx, dc_dx = flight_time(eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine)
-    return -ft, -c
-
-def obj_func_print(x):
-
-    global prt
-    prt = True
-    ft, c = obj_func(x)
-    prt = False
-
-    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = unscale(x)
-
-    print 'displacement (cc)',eng_displace
-    print 'fuel rate (kg/s)',fuel_rate
-    print 'angular velocity of the rotor (rpm)',omega_r
-    print 'Rotor radius (m)',R_rotor
-    print 'rotor chord (m)',c_rotor
-    print 'fuel capacity (kg)',fuel_cap
-    print 'theta_hover (deg)',theta_hover
-    print 'flight time (min)',-ft/60.0
-    return ft, c
-
-def scale(x):
-    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = x
-
-    eng_displace = eng_displace/80.0
-    fuel_rate = fuel_rate/.02
-    omega_r = omega_r/1500.0
-    R_rotor = R_rotor/0.705
-    c_rotor = c_rotor/0.05
-    fuel_cap = fuel_cap
-    theta_hover = theta_hover/20
-
-    return [eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover]
-
-def unscale(x):
-    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = x
-
-    eng_displace = eng_displace*80.0
-    fuel_rate = fuel_rate*.02
-    omega_r = omega_r*1500.0
-    R_rotor = R_rotor*0.705
-    c_rotor = c_rotor*0.05
-    fuel_cap = fuel_cap
-    theta_hover = theta_hover*20
-
-    return [eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover]
+    T = n_rotors*N*T
+    Q = n_rotors*N*Q
+    return T, Q
 
 '''
-def obj_func_penelty(x):
-
-    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = x
-#    fuel_rate, R_rotor = x
-
-    eng_displace = eng_displace*80.0
-    fuel_rate = fuel_rate*.02
-    omega_r = omega_r*1500*2*3.14159/60 #rpm to rad/s
-    R_rotor = R_rotor*0.705
-    c_rotor = c_rotor*0.05
-    fuel_cap = fuel_cap*1.0
-    theta_hover = theta_hover*6*3.14159/180
-
-    n_rotors = 4
-    payload = 5.0
-    frame = 2.0
-    rho_air = 1.225
-    E_rhof = 44.4e6
-    n_engine = 0.15
-
-    ft, c, dft_dx, dc_dx = flight_time(eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine)
-
-    P = 0.0;
-    for i in range(len(c)):
-        if c[i] > 0:
-            P += 100.0/2.0*c[i]**2
-
-    return -ft + P
-
-
 def nasa(N, R, omega, n, theta, AUW, rho):
 
 #    N           Number of blades in each rotor. A design variable?
@@ -250,4 +263,33 @@ def nasa(N, R, omega, n, theta, AUW, rho):
     Torque = N/2*rho*a*c*R**2*(omega*R)**2*(Q_coeff)
 
     return Thrust, Torque
+
+def obj_func_penelty(x):
+
+    eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover = x
+#    fuel_rate, R_rotor = x
+
+    eng_displace = eng_displace*80.0
+    fuel_rate = fuel_rate*.02
+    omega_r = omega_r*1500*2*3.14159/60 #rpm to rad/s
+    R_rotor = R_rotor*0.705
+    c_rotor = c_rotor*0.05
+    fuel_cap = fuel_cap*1.0
+    theta_hover = theta_hover*6*3.14159/180
+
+    n_rotors = 4
+    payload = 5.0
+    frame = 2.0
+    rho_air = 1.225
+    E_rhof = 44.4e6
+    n_engine = 0.15
+
+    ft, c, dft_dx, dc_dx = flight_time(eng_displace, fuel_rate, omega_r, R_rotor, c_rotor, fuel_cap, theta_hover, n_rotors, payload, frame, rho_air, E_rhof, n_engine)
+
+    P = 0.0
+    for i in range(len(c)):
+        if c[i] > 0:
+            P += 100.0/2.0*c[i]**2
+
+    return -ft + P
 '''
