@@ -28,8 +28,12 @@ A = np.array([data[:,0], np.ones(f.size)])
 a_w, b_w  = np.linalg.lstsq(A.T,f)[0]
 #print a,b
 plt.figure()
-plt.plot(data[:,0], data[:,1], 'ko')
-plt.plot([0,200], [b_w,a_w*200+b_w], '-k')
+plt.xlabel('Engine Size (cc)')  # labels for axes
+plt.ylabel('Engine Mass (kg)')
+plt.title('Mass Model')
+plt.plot(data[:,0], data[:,1], 'ko', label='Data')
+plt.plot([0,200], [b_w,a_w*200+b_w], '-k', label='Best Fit')
+plt.legend(loc='upper left')
 #plt.show()
 
 powerdata = np.array([0])
@@ -43,19 +47,22 @@ powerdata = powerdata.reshape(5,3)
 f = powerdata[:,2]*745.699872 #put the powerdata in Watts
 
 plt.figure(2)
+plt.xlabel('Engine Size (cc)')  # labels for axes
+plt.ylabel('Engine Power (W)')
+plt.title('Power Model')
 # data points
-plt.plot(powerdata[:,0], f, 'ko')
+plt.plot(powerdata[:,0], f, 'ko', label='Data')
 
 # linear model
 A = np.array([powerdata[:,0], np.ones(f.size)])
 a, b  = np.linalg.lstsq(A.T,f)[0]
 #print a,b
-plt.plot([0,200], [b,a*200+b], '-k')
+plt.plot([0,200], [b,a*200+b], '-k', label='Linear Fit')
 
 # data from http://www.barnardmicrosystems.com/UAV/engines/2_stroke.html
 a_ref = 76.0
 b_ref = 502.0
-plt.plot([0,200], [b_ref,a_ref*200+b_ref], '-k')
+plt.plot([0,200], [b_ref,a_ref*200+b_ref], '--k', label='Barnard Microsystems Fit')
 
 # quadratic model
 A = np.array([np.multiply(powerdata[:,0],powerdata[:,0]), powerdata[:,0]])
@@ -63,7 +70,8 @@ a, b  = np.linalg.lstsq(A.T,f)[0]
 print a,b
 x = np.linspace(0,200, num=100)
 y = a*np.multiply(x,x) + b*x
-plt.plot(x, y, '-k')
+plt.plot(x, y, '-.k', label='Quadratic Fit thru Origin')
+plt.legend(loc='upper left')
 plt.show()
 
 print a_ref/a_w  #Watts/kg
