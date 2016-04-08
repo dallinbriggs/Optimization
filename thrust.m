@@ -5,10 +5,10 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     %angular velocity, number of rotors, and blade pitch, fuel consumption rate.
 %     keyboard
     N = x(1);
-    R = x(2);
-    omega = x(3);
+    R = x(2)/10;
+    omega = x(3)*100;
     n = x(4);
-    theta = x(5);
+    theta = x(5)/10;
     f_rate = x(6)/10^3;
 
     V_c = 0;                % Vertical velocity is zero because of hover.
@@ -47,6 +47,7 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
 %         dT = N*L*dr;
         dT = .5*rho*a*N*omega^2.*C.*(theta-phi).*r.^2.*dr;
 %         dQ = N*(L*phi+D)*r*dr;
+%         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr;
         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr;
         dP = dQ*omega;
         T = dT*n + T;
