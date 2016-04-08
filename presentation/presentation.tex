@@ -1,0 +1,41 @@
+\documentclass{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\mode<presentation>
+\usetheme[footline=empty]{Magicc}
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\DeclareGraphicsExtensions{.pdf, .png, .jpg}
+
+\usepackage{tikz}
+
+% add logo to slide header
+\addtobeamertemplate{frametitle}{}{%
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east,yshift=2pt] at (current page.north east) {\includegraphics[height=0.75cm]{logo_white}};
+\end{tikzpicture}}
+
+% create outline slide at each \section{} (optional)
+\AtBeginSection[]{\frame{\frametitle{Outline}\tableofcontents[currentsection]}}
+
+% presentation info
+\title[Short Title]{GAS Quad}
+\author{Smart Person}
+\institute[MAGICC Lab]{\includegraphics[height=0.5in]{logo_gray}}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Presentation Guidelines}
+
+You will sign up for a 10 minute presentation time slot. The presentation is graded only for completion. Group projects will have 8 minutes to present and 2 minutes for Q\&A. Individuals will have 6 minutes to present and 2 minutes for Q\&A. Obviously you will not have a lot of time to spend on details. Instead, you should focus on motivation (what the problem is and why it is important), the solution approach, and the most important results. Each member of the team should have a role in the presentation.
+
+\end{frame}
+
+\end{document}

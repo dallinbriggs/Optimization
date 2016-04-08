@@ -6,3 +6,8 @@
 *.synctex.gz
 *.bbl
 *.pdf
+*.nav
+*.out
+*.snm
+*.toc
+*.pyc
