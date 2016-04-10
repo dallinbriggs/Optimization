@@ -12,7 +12,7 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     f_rate = x(6)/10^3;
 
     V_c = 0;                % Vertical velocity is zero because of hover.
-    a = .1091;               % Lift curve slope for naca 0012
+    a = .1091*180/pi;               % Lift curve slope for naca 0012
     rho = 1.225;            % Air density, kg/m^3
     C = .09*R;              % Chord length, based on rc rotor blades (extrapolated).
     T = 0;
@@ -31,8 +31,8 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     for i=1:m
         dr = R/m;
         r = i*R/m-.5*R/m;
-        s = n*C/pi*r;
-        phi = 1/16*(-sqrt(a)*sqrt(s)*sqrt(a*s+32*theta)-a*s); %atan(U_P/U_T);          % Small angle approximation because U_P << U_T.
+        s = N*C/(pi*r);
+        phi = 1/16*(sqrt(a)*sqrt(s)*sqrt(a*s+32*theta)-a*s); %atan(U_P/U_T);          % Small angle approximation because U_P << U_T.
         alpha = theta - phi;
         C_l = -98.031*alpha^3 + 0.9481*alpha^2 + 8.2078*alpha - 0.009;          % Lift coefficient based on Xfoil data.
         C_d = 51.031*alpha^4 - 0.9405*alpha^3 - 0.5316*alpha^2 + 0.0191*alpha + 0.0168;   % Drag coefficient based on xfoil data.
@@ -48,18 +48,20 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
         dT = .5*rho*a*N*omega^2.*C.*(theta-phi).*r.^2.*dr;
 %         dQ = N*(L*phi+D)*r*dr;
 %         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr;
-        dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr;
+        dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr*N;
+        
         dP = dQ*omega;
         T = dT*n + T;
         Q = dQ*n + Q;
         P = dP*n + P; 
     end
     
-    T_produced = T*n;
-    power_required = P*n;
+    T_produced = T;
+    power_required = P;
     power_produced = f_rate*E_rhof*n_engine;
     T_required     = AUW*9.8;   % 1.5 multiplier for controllability.
     FT = -f_cap/f_rate;             % multiply by negative to allow for minimization.
+    AUW_limit = 24.9*9.8;   % 55 lbs
 %     persistent iter;
 %     if isempty(iter)
 %         iter = 0;
