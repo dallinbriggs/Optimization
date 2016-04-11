@@ -36,18 +36,8 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
         alpha = theta - phi;
         C_l = -98.031*alpha^3 + 0.9481*alpha^2 + 8.2078*alpha - 0.009;          % Lift coefficient based on Xfoil data.
         C_d = 51.031*alpha^4 - 0.9405*alpha^3 - 0.5316*alpha^2 + 0.0191*alpha + 0.0168;   % Drag coefficient based on xfoil data.
-        t_c = C_l/6;
-        lambda_i = sqrt(s*t_c/2);
-        v_i = omega*r*lambda_i;
-        U_T = omega*r;          % Tangential component of velocity.
-        U_P = V_c + v_i;          % Perpendicular component of velocity.
-  
-        L = .5*rho*C*a*(U_T^2*theta-U_P*U_T);
-        D = .5*rho*U_T^2*C*C_d;
-%         dT = N*L*dr;
+       
         dT = .5*rho*a*N*omega^2.*C.*(theta-phi).*r.^2.*dr;
-%         dQ = N*(L*phi+D)*r*dr;
-%         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr;
         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr*N;
         
         dP = dQ*omega;
@@ -62,14 +52,7 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     T_required     = AUW*9.8;   % 1.5 multiplier for controllability.
     FT = -f_cap/f_rate;             % multiply by negative to allow for minimization.
     AUW_limit = 24.9*9.8;   % 55 lbs
-%     persistent iter;
-%     if isempty(iter)
-%         iter = 0;
-%     end
-%     iter = iter +1;
-%     if iter > 1000
-%         keyboard
-%     end
+
 end
 
 
