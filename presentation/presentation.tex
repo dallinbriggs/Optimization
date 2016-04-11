@@ -33,35 +33,16 @@
 \titlepage
 \end{frame}
 
-\begin{frame}{Presentation Guidelines}
-
-You will sign up for a 10 minute presentation time slot. The presentation is graded only for completion. Group projects will have 8 minutes to present and 2 minutes for Q\&A. Individuals will have 6 minutes to present and 2 minutes for Q\&A. Obviously you will not have a lot of time to spend on details. Instead, you should focus on motivation (what the problem is and why it is important), the solution approach, and the most important results. Each member of the team should have a role in the presentation.
-
-\end{frame}
-
-\begin{frame}{Outline}
-\begin{itemize}
-	\item{Motivation and Background}
-	\item{---figure of multirotor trends in flight time}
-	\item{---focus on OTS stuff bases our design on empirical models}
-	
-	\item{Theory - models}
-	\item{---Engine model}
-	\item{---Aero model}
-	
-	\item{Optimization}
-	\item{---Objective only directly a function of 2 design variables}
-	\item{---constraints}
-	
-	\item{Results}
-	\item{lessons learned}
-	\item{questions}
-\end{itemize}
-\end{frame}
 
 \begin{frame}{Introduction}
 
-	What is a gas quad...
+	What is a gas multirotor?
+	\begin{itemize}
+	\item{Uses a single small two-stroke engine.}
+	\item{Power is transfered through torque tubes to the rotors.}
+	\item{All rotors must be variable pitch.}
+	\item{Theoretically capable of longer flight times than battery powered multirotors because of higher specific energy of gasoline.}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Motivation and Background}
@@ -96,7 +77,7 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 	
 \end{frame}
 
-\begin{frame}{Models}
+\begin{frame}{Aerodynamic Model}
 	\begin{itemize}
 		\item{To represent the aerodynamics of each rotor, we used Combined Differential Blade Element and Momentum Theory for nonuniform inflow.}
 		\begin{center}
@@ -123,6 +104,7 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 	$C: P_{Shaft} \geq P_{Rotor}, T \geq W_{total}, P_{max} \geq P_{Shaft}, 55lbs \geq W_{total} $ 
 	
 	SNOPT to optimize
+
 \end{frame}
 
 \begin{frame}{Results}
