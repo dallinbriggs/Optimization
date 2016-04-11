@@ -38,9 +38,9 @@ if __name__ == '__main__':
 
 
     # Create the pareto frunt
-    '''
-    steps = 10
-    payloads = np.linspace(0.0, 8.0, num=steps)
+
+    steps = 20
+    payloads = np.linspace(0.0, 10.0, num=steps)
     flight_times = np.zeros(steps)
     engine_size = np.zeros(steps)
     for i in range(steps):
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         xopt, fopt, info = optimize(obj_func, x0, lb, ub, optimizer)
         flight_times[i] = -fopt/60
         engine_size[i] = xopt[0]*80.0
-        engine_size[i] = xopt[3]
+        # engine_size[i] = xopt[3]
 
     plt.figure()
     plt.xlabel('Useful Payload (kg)')  # labels for axes
@@ -94,3 +94,4 @@ if __name__ == '__main__':
     print multiOpt(xopt)
 
     out = obj_func_print(xopt)
+    '''
