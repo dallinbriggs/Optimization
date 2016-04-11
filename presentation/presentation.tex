@@ -114,15 +114,15 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 		\item{Rotor Size}
 		\item{Fuel Capacity}
 		\item{Fuel Burn Rate}
-		\item{theta hover}
-		\item{omega}
+		\item{Rotor Pitch Angle}
+		\item{Head Speed}
 	\end{itemize}
 	
-	Flight Time = f(Fuel Capacity/Fuel Rate)
+	$Flight Time = f(Fuel Capacity, Fuel Rate)$
 	
-	C = ...
+	$C: P_{Shaft} \geq P_{Rotor}, T \geq W_{total}, P_{max} \geq P_{Shaft}, 55lbs \geq W_{total} $ 
 	
-	SNOPT
+	SNOPT to optimize
 \end{frame}
 
 \begin{frame}{Results}
@@ -143,13 +143,28 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 	\end{figure}
 \end{frame}
 
+\begin{frame}{Results}
+	Simultaneously optimize over 3, 5, and 7 kg payload
+	\begin{itemize}
+		\item{Engine Size: 177 cc} 
+		\item{Rotor Size: 2.16 m}
+		\item{Fuel Capacity: 6.45 kg}
+		\item{Fuel Burn Rate: 0.0019 kg/s}
+		\item{Rotor Pitch Angle: 17.618 deg}
+		\item{Head Speed: 135.09 rpm}
+	\end{itemize}
+	
+	Flight Time > 42.47 minutes
+	
+	Payload < 7 kg
+\end{frame}
+
 \begin{frame}{Lessons Learned}
 	\begin{itemize}
+		\item{Large, Slow props - https://youtu.be/syJq10EQkog?t=7s}
 		\item{Helicopter rotor dynamics are difficult to conceptualize and calculate.}
 		\item{Over-simplification of aerodynamic model leads to unrealistic results.}
-		\item{large, slow props - https://youtu.be/syJq10EQkog?t=7s}
-		
-	
+		\item{Scaling the problem was critical}	
 	\end{itemize}
 \end{frame}
 

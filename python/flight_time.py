@@ -106,7 +106,7 @@ def scale(x):
     eng_displace = eng_displace/80.0
     fuel_rate = fuel_rate/.02
     omega_r = omega_r/1500.0
-    R_rotor = R_rotor/0.705
+    R_rotor = R_rotor
     fuel_cap = fuel_cap
     theta_hover = theta_hover/20
 
@@ -118,7 +118,7 @@ def unscale(x):
     eng_displace = eng_displace*80.0
     fuel_rate = fuel_rate*.02
     omega_r = omega_r*1500.0
-    R_rotor = R_rotor*0.705
+    R_rotor = R_rotor
     fuel_cap = fuel_cap
     theta_hover = theta_hover*20
 
@@ -169,7 +169,7 @@ def simple_aero_model(AUW, omega, R_rotor, c_rotor, theta_hover, rho_air, n_roto
     T = n_rotors*2*T
     Q = n_rotors*2*Q
 
-    return T, 8*Q
+    return T, 4*Q
 
 def other_aero_model(omega, R_rotor, c_rotor, theta, rho_air, n_rotors):
 
