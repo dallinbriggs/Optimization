@@ -57,8 +57,8 @@ if __name__ == '__main__':
 
     plt.figure(2)
     plt.xlabel('Useful Payload (kg)')  # labels for axes
-    plt.ylabel('Engine size (cc)')
-    plt.title('Verying Engine Size with payload')
+    plt.ylabel('Engine Size (cc)')
+    plt.title('Engine Size with Payload')
     plt.plot(payloads, engine_size, '-k', label='Data')
     # plt.legend(loc='upper left')
     plt.show()
