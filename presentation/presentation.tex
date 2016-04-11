@@ -59,6 +59,11 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Introduction}
+
+	What is a gas quad...
+\end{frame}
+
 \begin{frame}{Motivation and Background}
 	\begin{center}
 	Currently available multirotor capabilities
@@ -95,16 +100,29 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 	\begin{itemize}
 		\item{To represent the aerodynamics of each rotor, we used Combined Differential Blade Element and Momentum Theory for nonuniform inflow.}
 		\begin{center}
-		$ dT = \frac{1}{2} \rho a \Omega^2 r^2 (\theta - \phi) c \  dr $
-		
-		$ dQ = \frac{1}{2} \rho \Omega^2 r^3 c (\delta + \phi C_L) \ dr $
+		$$ dT = \frac{1}{2} \rho a \Omega^2 r^2 (\theta - \phi) c \  dr $$
+		$$ dQ = \frac{1}{2} \rho \Omega^2 r^3 c (\delta + \phi C_L) \ dr $$
 		\end{center}
 	\end{itemize}
 
 \end{frame}
 
 \begin{frame}{Optimization Method}
-
+	Design Variables
+	\begin{itemize}
+		\item{Engine Size}
+		\item{Rotor Size}
+		\item{Fuel Capacity}
+		\item{Fuel Burn Rate}
+		\item{theta hover}
+		\item{omega}
+	\end{itemize}
+	
+	Flight Time = f(Fuel Capacity/Fuel Rate)
+	
+	C = ...
+	
+	SNOPT
 \end{frame}
 
 \begin{frame}{Results}
@@ -129,7 +147,7 @@ You will sign up for a 10 minute presentation time slot. The presentation is gra
 	\begin{itemize}
 		\item{Helicopter rotor dynamics are difficult to conceptualize and calculate.}
 		\item{Over-simplification of aerodynamic model leads to unrealistic results.}
-		
+		\item{large, slow props - https://youtu.be/syJq10EQkog?t=7s}
 		
 	
 	\end{itemize}
