@@ -20,7 +20,7 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     P = 0;
     n_engine = 0.15;                            % Efficiency of the engine
     E_rhof = 32.4e6;                            %Energy density of fuel (Joules/L)
-    f_cap = 19;             % In liters.
+    f_cap = 7;             % In liters.
     W_motor = 2.1;                              %Motor weight
     W_f = f_cap*.75;                            %Fuel weight (kg)
     payload = 5;                                %Payload weight
@@ -46,7 +46,7 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
         P = dP*n + P; 
     end
     
-    T_produced = T;
+    T_produced = T*.8;
     power_required = P;
     power_produced = f_rate*E_rhof*n_engine;
     T_required     = AUW*9.8;   % 1.5 multiplier for controllability.
