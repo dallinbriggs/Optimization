@@ -26,7 +26,7 @@ f = data[:,1]
 A = np.array([data[:,0], np.ones(f.size)])
 
 a_w, b_w  = np.linalg.lstsq(A.T,f)[0]
-#print a,b
+print a_w,b_w
 plt.figure()
 plt.xlabel('Engine Size (cc)')  # labels for axes
 plt.ylabel('Engine Mass (kg)')
@@ -67,11 +67,11 @@ plt.plot([0,200], [b_ref,a_ref*200+b_ref], '--k', label='Barnard Microsystems Fi
 # quadratic model
 A = np.array([np.multiply(powerdata[:,0],powerdata[:,0]), powerdata[:,0]])
 a, b  = np.linalg.lstsq(A.T,f)[0]
-print a,b
+# print a,b
 x = np.linspace(0,200, num=100)
 y = a*np.multiply(x,x) + b*x
 plt.plot(x, y, '-.k', label='Quadratic Fit thru Origin')
 plt.legend(loc='upper left')
 plt.show()
 
-print a_ref/a_w  #Watts/kg
+# print a_ref/a_w  #Watts/kg

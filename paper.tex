@@ -136,93 +136,37 @@ The engine efficiency (friction and heat transfer losses), however, is a functio
 
 Although the off-the-shelf constraint also applies to choosing the rotor parameters, continuous variables approximating the rotor specs are used and then analyzed as follows. 
 
-Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks.
+\subsection{Aerodynamics}
 
-First model used in the beginning of the project used a simplified version of Momentum theory and actuator disk theory from \cite{helicopters2016}. This model took into account the number of rotors, the rotor radius, the disc loading of each rotor, and how much fuel was available onboard the aircraft. However, this model did not take into account the blade speed, blade pitch angle, or the number of blades per rotor. The model did, however, give us a baseline for initial optimization results.
+Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks. Since each rotor will be designed using small-scale helicopter components that consist of variable-pitch rotors that have no twist, a simplified helicopter rotor aerodynamic model should be sufficient for these calculations. 
 
-Second model used to develop the optimization framework for this project was based on an MIT lecture given on aircraft propeller performance given in \cite{mit2016}. In order to test the theory of this model and also to further the progress of the optimization model, only two of the design variables were chosen to optimize: rotor radius and fuel consumption rate, $f_{rate}$. 
+Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods rather than the complex aerodynamics of the system, several simplifications were made.
 
-To properly analyses the system, power required ($P_{req}$) and thrust produced ($T_{prod}$) have to be calculated to make sure that the rotor radius had a relationship to the fuel consumption rate. These calculations used some approximations in the rotor dynamics. The following calculations come from a MIT lecture on thermodynamics.
-
-In order to calculate thrust of each rotor blade, the thrust has to be calculated differentially along the blade because of the angular velocity. The differential thrust is given by 
-\begin{equation}
-	dT = dLcos(\phi + \alpha_i) - dDsin(\phi + \alpha_i)
-\end{equation}
-
-where $\phi = \tan^{-1}(\frac{V_i}{V_n})$, and $\alpha_i = \theta - \tan^{-1}(\frac{V_i}{V_n})$ and $\theta$ is the blade pitch angle (held constant in this case of the optimization). $dL$ and $dD$ are the differentials of the lift and drag, respectively, and are given by
-\begin{equation}
-	dL = \frac{1}{2}\rho V_e^2 c C_l dr
-\end{equation}
-
-and 
+Combined differential blade element and momentum theory for nonuniform inflow was used to calculate the thrust and the torque differentially across each rotor blade \cite{bramwell2001bramwell}. The differential thrust is given by
 
 \begin{equation}
-	dD = \frac{1}{2}\rho V_e^2 c C_d dr.
+	dT = \frac{1}{2} \rho a \Omega^2 r^2 (\theta - \phi) c \  dr,
+	\label{thrust_eqn}
 \end{equation}
 
-The coefficients of lift and drag were held constant at $C_l = 0.5438$ and $C_d = 0.0141$ (obtained from a symmetric airfoil pitch at $\alpha = 5$ degrees). Splitting the rotor into 10 sections and integrating seemed to give a reasonable estimate to the thrust produced by each rotor. This was then constrained by making sure the thrust produced was greater than or equal to the thrust required, which was
+where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor can then be calculated by multiplying the blade thrust by the number of \textit{N} rotors. 
+
+The differential torque for each rotor blade is given by
+
 \begin{equation}
-	T_{req} = AUW\times g.
+	dQ = \frac{1}{2} \rho \Omega^2 r^3 c (\delta + \phi C_L) \ dr,
+	\label{torque_eqn}
 \end{equation}
 
-In order to make sure that enough power was being produced by the engine (and prevent the fuel consumption rate to going to 0), the power produced was given by 
+where $\delta$ is the local blade drag coefficient, and $C_L$ is the lift coefficient. The total torque for each blade and the multirotor can be found using the same method for calculating the thrust. 
+
+The differential power produced by each rotor is given by 
+
 \begin{equation}
-	P_{prod} = f_{rate}E_{\rho f} \eta_{engine}
+	dP = dQ\Omega,
 \end{equation}
 
-and was made sure that it was greater than or equal to the power required. To calculate the power required, the torque required to turn each rotor was calculated differentially by the equation
-\begin{equation}
-	dQ = r[dLsin(\phi + \alpha_i) + dDcos(\phi + \alpha_i)].
-\end{equation}
-
-The power required was then calculated by 
-\begin{equation}
-	P_{req} = \omega_rQ_{req}2n_{rotors}.
-\end{equation}
-
-This model did converge to an optimal solution when executed with gradient based optimization methods discussed in the next section. However, in this model, not all of the design variables were implemented due to the complexity these additional variables brought to the calculus in this method.
-
-The third model used to represent the aerodynamics and thrust of each rotor blade was from \cite{chen1979simplified}, a NASA model used in helicopter simulations several years ago. Instead of trying to implement blade element theory across the blade, this new model is able to approximate the thrust and torque required for the rotor given numerous variables. Instead of only varying rotor radius and fuel consumption rate, like last homework's model, this model attempts to optimize given rotor radius, fuel consumption rate, number of blade per rotor, number of rotors, rotor speed, and rotor pitch. The thrust, T, is given by equation \ref{thrust} and the torque, Q, is represented by equations \ref{torque} and \ref{torquecoeff}.
-
-\begin{multline}
-T = \frac{N}{2} \rho a c R (\omega R)^2 (.5 (1-\epsilon^2) \lambda \\
- + \theta_0 (\frac{1}{3} + \frac{\mu^2}{2} (1-\epsilon)) + \theta_t (.25+\frac{\mu^2}{2} (1-\epsilon^2))\\
-- \frac{\mu}{2} (1-\epsilon^2) (B_{lc}-K_l b_l) - a_0 (\frac{1}{3} +\frac{\mu^2}{2} (1-\epsilon)) K_l \\
-+ a_l (\frac{\mu}{2} \epsilon (1-\epsilon)) - \frac{\dot{a_0}}{\omega} (\frac{1}{3} -\frac{\epsilon}{2}) + \frac{\dot{b_l}}{\omega} (\frac{\mu}{4} (1-\epsilon)^2) \\
-+ \frac{\mu}{4} (1-\epsilon^2) (\frac{p}{\omega cos(\beta_w)} + \frac{q}{\omega sin(\beta_w))} ) - N M_\beta \ddot{a_0}
-\label{thrust}
-\end{multline}
-and
-\begin{equation}
-Q = N/2 \rho a c R^2 (\omega R)^2 (Q_{coeff})
-\label{torque}
-\end{equation}
-where
-\begin{multline}
-Q_{coeff} = \delta/(4 a) (1 + (1-\epsilon^2) \mu^2) \\
- - (\theta_0 - K_l a_0)(\lambda/3+(\epsilon/3-.25) \dot{a_0}/\omega + \mu/6 \dot{b_l}/\omega\\  
-- \mu \epsilon/4 (\dot{b_l}/\omega-a_l) + \mu/6 (p/\omega cos(\beta_w) +q/\omega sin(\beta_w))) \\
-- (A_{lc}-K_l a_l) ((.125-\epsilon/6) (\dot{a_l}/\omega+b_l)-\mu/6 a_0 \\
-+b_l/16 (1-\epsilon^2) \mu^2+1/8 (-p/\omega sin(\beta_w)+q/\omega cos(\beta_w)))\\ 
-- (B_lc-K_l b_l) ((.125-\epsilon/6) (\dot{b_l}/\omega-a_l)\\
-+(\epsilon/4-1/6) \mu \dot{a_0}/\omega+.5 (1-\epsilon^2) (\mu \lambda/2+a_l/8 \mu^2)\\ 
-+ 1/8 (p/\omega cos(\beta_w)+q/\omega sin(\beta_w))) - \theta_t (\lambda/4\\ 
-+ (\epsilon/4-1/5) \dot{a_0}/\omega+\mu/8 (\dot{b_l}/\omega)-\epsilon \mu/6 (\dot{b_l}/\omega-a_l))\\  
-- .5 (1-\epsilon^2) (\lambda^2+\lambda \mu a_l+2 \lambda \epsilon \dot{a_0}/\omega\\  
-+\mu \epsilon (a_l \dot{a_0}/\omega+a_0 (\dot{a_l}/\omega+b_l))\\  
-+ \mu^2 (a_0^2/2+3/8 a_l^2+1/8 b_l^2)) + \mu/3 (a_l (\dot{a_0}/\omega) \\
-+ a_0 (\dot{a_l}/\omega+b_l))+2/3 \lambda (\dot{a_l}/\omega)\\  
-- (-\mu/3 a_0 + (.25-\epsilon/3) (\dot{a_l}/\omega+b_l)) \\ 
-(-p/\omega sin(\beta_w)+q/\omega cos(\beta_w))\\ 
-- (.25-\epsilon/3) (\dot{b_l}/\omega-a_l) (p/\omega cos(\beta_w)\\ 
-+ q/\omega sin(\beta_w)) - .125 (-p/\omega sin(\beta_w)+q/\omega cos(\beta_w))^2 \\ 
--.125 (p/\omega cos(\beta_w)+q/\omega sin(\beta_w))^2 -  \\
-(.25-2/3 \epsilon+\epsilon^2/2) ((\dot{a_0}/\omega)^2 \\ 
-+ .5 ((\dot{a_l}/\omega+b_l)^2+(\dot{b_l}/\omega-a_l)^2))
-\label{torquecoeff}
-\end{multline}
-
-Please see \cite{chen1979simplified} for definition of terms. Although this model takes into account all of the design variables chosen for this project, it is difficult to optimize because of the complexity of the functions. \textit{Currently, this model fails to converge to a solution, so we are working with it to find the source of the issue.}
+and the total power can be calculated using the same method as thrust and torque. 
 
 
 \section{OPTIMIZATION}
