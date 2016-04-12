@@ -17,4 +17,5 @@ Blade_pitch = opt_A(5)*180/pi/10;
 fuel_rate = opt_A(6)/10^3;
 engine_size = opt_A(7)*100;
 Flight_time = -fval*1e4/3600;
+fuel_capacity = opt_A(8);
 

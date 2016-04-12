@@ -16,14 +16,14 @@ options = optimoptions('fmincon',...
         'Diagnostics', 'on', ...  % display diagnotic information
         'PlotFcns',{@optimplotfval,@optimplotfirstorderopt});
 
-A0 = [2,.5*10,2*pi*2000/60/100,4,5*pi/180*10,.001*10^3,100/100]; % Initial guess on number of blades in each rotor, 
+A0 = [2,.5*10,2*pi*2000/60/100,4,5*pi/180*10,.001*10^3,100/100,5]; % Initial guess on number of blades in each rotor, 
                                        %rotor radius, angular velocity, number of rotors, 
                                        %and blade pitch, fuel consumption rate.                
 
 Aeq = [];
 Beq = [];
-lb = [2, .01*10, 2*pi*00/60/100, 1, 0, 0.000001848346*10^3,0]; 
-ub = [2, 10*10, 2*pi*4500/60/100, 4, 20*pi/180*10, 0.0246446*10^3,500/100];
+lb = [2, .01*10, 2*pi*00/60/100, 1, 0, 0.00001848346*10^3,0,0]; 
+ub = [2, 10*10, 2*pi*4500/60/100, 4, 22*pi/180*10, 0.0246446*10^3,500/100,30];
 
 
 [opt_A,fval,exitflag,output_fmin,lambda,gradient] = fmincon(@obj, A0, [], [], Aeq, Beq, lb, ub,@con,options);

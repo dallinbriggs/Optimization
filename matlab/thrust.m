@@ -11,7 +11,7 @@ function [FT,power_produced,power_required,T_produced,T_required,AUW,AUW_limit,e
     theta = x(5)/10;
     f_rate = x(6)/10^3;
     engine_size = x(7)*100;
-    
+    f_cap = x(8);                                  % In liters.
 
     
     a = .1091*180/pi;               % Lift curve slope for naca 0012
@@ -22,7 +22,7 @@ function [FT,power_produced,power_required,T_produced,T_required,AUW,AUW_limit,e
     P = 0;
     n_engine = 0.1;                            % Efficiency of the engine
     E_rhof = 44.4e6;                            %Energy density of fuel (Joules/L)
-    f_cap = 7;                                  % In liters.
+    
     W_motor = 0.02144822774*engine_size + 0.254117290343;                              %Motor weight
     W_f = f_cap*.75;                            %Fuel weight (kg)
     payload = 5;                                %Payload weight
