@@ -86,6 +86,8 @@ Currently, there are numerous multirotor UAVs that are available commercially an
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
+Incorporating a gas powered engine into a multirotor requires more then just exchanging the electric motors and batteries for an engine and a gas tank respectively. The control of such a vehicle would also fundamentally change.  Electric multirotors are controlled by spinning the rotors faster at slower to produce varying thrust and torque. Gad engines are unable to rev up as fast as electric motors meaning a fixed speed and variable pitch propeller is better suited for a gas powered vehicle.
+
 Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a small, electric variable pitch quad commercially available \cite{stingray2016}.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}.
 
 In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a relatively large payload. 
@@ -94,8 +96,9 @@ There are many commercially available parts for a gas quad, including engines an
 
 \section{MOTIVATION}
 
-Nearly all commercial and consumer multirotor UAVs are powered by Lithium-Polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very good and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for Lithium-Polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potential fly much longer than a battery powered multirotor because it can carry more energy onboard. 
+Nearly all commercial and consumer multirotor UAVs are powered by lithium-polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very useful and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for lithium-polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potentially fly much longer than a battery powered vehicle because it can carry more energy.  
 
+The gass powered quadcopter will have variable pitch propellers would be  
 \begin{itemize}
 	\item{Will talk more about some of the details using a gas engine entails in the paper.}
 	\item{Speak briefly on the reasons for requiring variable pitch with a gas engine.} 
@@ -115,17 +118,17 @@ Nearly all commercial and consumer multirotor UAVs are powered by Lithium-Polyme
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
 
-Because the quad is going to be build using commercially available off-the-shelf parts the optimization must be closely based on reality.  This means we only can pick the size of engine that we are going to use.  All the other data about the engine (mass, maximum power, etc.) have to be a function of displacement size.  We collected data about popular two stroke RC aircraft engines from several sources to produce the below plots. 
+Because the quad is going to be build using commercially available off-the-shelf parts the optimization must be closely based on reality.  This means we only can pick the size of engine that we are going to use.  All the other data about the engine (mass, maximum power, etc.) have to be a function of displacement size.  We collected data about popular two stroke RC aircraft engines from several sources to produce the models. One source was Desert Aircraft \cite{da2016}.
 
 \begin{figurehere}
 	\includegraphics[width=0.5\textwidth]{mass.png}
-	\caption{Stand in figure showing the data used to obtain the empirical based surrogate model of engine mass as a function of displacement size.}
+	\caption{The empirical based surrogate model of engine mass as a function of displacement size. Data from desertaircraft.com \cite{da2016}}
 		\label{fig:mass}
 \end{figurehere}
 
 \begin{figurehere}
 	\includegraphics[width=0.5\textwidth]{max_power.png}
-	\caption{Stand in figure showing the data used to obtain the empirical based surrogate model of engine maximum power as a function of displacement size.}
+	\caption{Empirical based surrogate model of engine maximum power as a function of displacement size. Data from desertaircraft.com \cite{da2016} and barnardmicrosystems.com \cite{barnardmiro2016}}
 		\label{fig:power}
 \end{figurehere}
 
