@@ -1,4 +1,4 @@
-function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
+function [FT,power_produced,power_required,T_produced,T_required,AUW,AUW_limit,engine_power] = thrust(x)
 
     % This method of calculating thrust uses blade element theory
     %x consists of the number of blades in each rotor, rotor radius, 
@@ -10,22 +10,24 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
     n = x(4);
     theta = x(5)/10;
     f_rate = x(6)/10^3;
+    engine_size = x(7)*100;
+    
 
-    V_c = 0;                % Vertical velocity is zero because of hover.
+    
     a = .1091*180/pi;               % Lift curve slope for naca 0012
     rho = 1.225;            % Air density, kg/m^3
     C = .09*R;              % Chord length, based on rc rotor blades (extrapolated).
     T = 0;
     Q = 0;
     P = 0;
-    n_engine = 0.15;                            % Efficiency of the engine
-    E_rhof = 32.4e6;                            %Energy density of fuel (Joules/L)
-    f_cap = 7;             % In liters.
-    W_motor = 2.1;                              %Motor weight
+    n_engine = 0.1;                            % Efficiency of the engine
+    E_rhof = 44.4e6;                            %Energy density of fuel (Joules/L)
+    f_cap = 7;                                  % In liters.
+    W_motor = 0.02144822774*engine_size + 0.254117290343;                              %Motor weight
     W_f = f_cap*.75;                            %Fuel weight (kg)
     payload = 5;                                %Payload weight
-    W_frame = 7;                                %Frame weight
-    AUW = W_motor + W_f + W_frame + payload;    %All up weight in kg (about 52 lbs)
+    W_frame = 4.26*R;                                %Frame weight
+    AUW = (W_motor + W_f + W_frame + payload)*9.8;    %All up weight in kg (about 52 lbs)
     
     m = 10;
     for i=1:m
@@ -40,18 +42,19 @@ function [FT,power_produced,power_required,T_produced,T_required] = thrust(x)
         dT = .5*rho*a*N*omega^2.*C.*(theta-phi).*r.^2.*dr;
         dQ = .5*rho*omega^2*r^3*C*(C_d+phi*C_l)*dr*N;
         
-        dP = dQ*omega;
+%         dP = dQ*omega;
         T = dT*n + T;
         Q = dQ*n + Q;
-        P = dP*n + P; 
+        P = Q*omega + P; 
     end
     
+    engine_power = -0.0454790393518*engine_size^2 + 79.5042893755*engine_size;
     T_produced = T*.8;
     power_required = P;
     power_produced = f_rate*E_rhof*n_engine;
-    T_required     = AUW*9.8;   % 1.5 multiplier for controllability.
+    T_required     = AUW;           % 1.5 multiplier for controllability.
     FT = -f_cap/f_rate;             % multiply by negative to allow for minimization.
-    AUW_limit = 24.9*9.8;   % 55 lbs
+    AUW_limit = 24.9*9.8;           % 55 lbs
 
 end
 
