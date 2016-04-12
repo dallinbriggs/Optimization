@@ -142,36 +142,54 @@ Much of the work done in the methodology of optimizing flight time was to find a
 
 Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods rather than the complex aerodynamics of the system, several simplifications were made.
 
-Combined differential blade element and momentum theory for nonuniform inflow was used to calculate the thrust and the torque differentially across each rotor blade \cite{bramwell2001bramwell}. The differential thrust is given by
+Combined differential blade element and momentum theory for nonuniform inflow was used to calculate the thrust and the torque differentially across each rotor blade \cite{bramwell2001bramwell}. Using blade element theory, the differential thrust is given by
 
 \begin{equation}
-	dT = \frac{1}{2} \rho a \Omega^2 r^2 (\theta - \phi) c \  dr,
+	dT_{prod} = \frac{1}{2} \rho a \Omega^2 r^2 (\theta - \phi) c \  dr,
 	\label{thrust_eqn}
 \end{equation}
 
-where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor can then be calculated by multiplying the blade thrust by the number of \textit{N} rotors. 
+where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor, $T_{prod}$ can then be calculated by multiplying the blade thrust by the number of \textit{N} rotors. 
 
 The differential torque for each rotor blade is given by
 
 \begin{equation}
-	dQ = \frac{1}{2} \rho \Omega^2 r^3 c (\delta + \phi C_L) \ dr,
+	dQ_{req} = \frac{1}{2} \rho \Omega^2 r^3 c (\delta + \phi C_L) \ dr,
 	\label{torque_eqn}
 \end{equation}
 
-where $\delta$ is the local blade drag coefficient, and $C_L$ is the lift coefficient. The total torque for each blade and the multirotor can be found using the same method for calculating the thrust. 
+where $\delta$ is the local blade drag coefficient, and $C_L$ is the lift coefficient. The total torque for the multirotor , $Q_{req}$, can be found using the same method for calculating the thrust. 
 
-The differential power produced by each rotor is given by 
+The differential power produced by each rotor is then given by 
 
 \begin{equation}
-	dP = dQ\Omega,
+	dP_{req} = dQ\Omega,
+	\label{power_eqn}
 \end{equation}
 
-and the total power can be calculated using the same method as thrust and torque. 
+and the total power required by the rotors, $P_{req}$, can be calculated using the same method as thrust and torque. 
+
+Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the Optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
+
+Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. Data points for this airfoil were generated using Xfoil. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across the range of the angle of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
+
+Momentum theory allows for a relatively simple calculation of the inflow angle for each element of the blade. This calculation is an approximation, but it is sufficient for our lower fidelity model in designing the rotor system. The inflow angle is given by 
+
+\begin{equation}
+\phi^2 = (\frac{a\sigma}{8})(\theta-\phi),
+\label{inflow_eqn}
+\end{equation}
+
+where 
+
+$$\sigma = \frac{bc}{\pi r}$$
+
+is the blade solidity ratio based on local rotor radius, and \textit{b} is the number of blades in each ratio. 
 
 
 \section{OPTIMIZATION}
 
-Our design variables are rotor radius, fuel consumption rate, number of blades per rotor, number of rotors, rotor speed, and rotor pitch. Rotor radius and number of blades per rotor, and number of rotors were chosen because this is an easy parameter to vary on multirotors due to the availability of numerous rotor blades available for small rotor aircraft. These variables also have a large influence on the flight time of the multirotor. Rotor speed and rotor pitch were chosen because these variables are easy to change on the physical system through selecting the proper gearing ratios. Fuel consumption rate seems like an odd variable for an optimizer because intuitively an optimizer would just minimize this value to maximize the flight time; however, fuel consumption rate is constrained by the size of engine required to produce the amount of power needed to provide enough lift for the multirotor. All of these design variables, however, have bound constraints that keep them in a reasonable space of commercially available parts/performance.
+Our design variables are rotor radius, fuel consumption rate, number of blades per rotor, number of rotors, rotor speed, rotor pitch, engine size, and fuel capacity. Rotor radius and number of blades per rotor, and number of rotors were chosen because this is an easy parameter to vary on multirotors due to the availability of numerous rotor blades available for small rotor aircraft. These variables also have a large influence on the flight time of the multirotor. Rotor speed and rotor pitch were chosen because these variables are easy to change on the physical system through selecting the proper gearing ratios. Fuel consumption rate seems like an odd variable for an optimizer because intuitively an optimizer would just minimize this value to maximize the flight time; however, fuel consumption rate is constrained by the size of engine required to produce the amount of power needed to provide enough lift for the multirotor. All of these design variables, however, have bound constraints that keep them in a reasonable space of commercially available parts/performance.
 
 Setup the formal optimization problem
 \begin{equation}
@@ -213,17 +231,17 @@ Since we can only optimize for maximum flight time give a payload (parameter) we
 
 \section{RESULTS AND DISCUSSION}
 
-We have found that the flight time of a gas-quad can be maximized by constructing with the following design.
+We have found that if the design variables are left unbound and all of the constraints are still being met, the maximum flight time could be 11.32 hours. The values of these design variables can be seen in table \ref{table:unbound_results}. 
 
 \begin{tablehere}
 \centering
-\begin{tabulary}{0.5\textwidth}{|C|C|C|C|C|C|}
+\begin{tabulary}{0.5\textwidth}{|C|C|C|C|C|}
 \hline
-       & displacement & fuel rate & rotor radius & other \\ \hline
-  & 100 & 30 & 250 & 150 \\ \hline
+       \# of Blades & Rotor Radius & Rotor Speed & \# of Rotors \\ \hline
+  100 & 30 & 250 & 150 \\ \hline
 \end{tabulary}
 \caption{Optimal design variables}
-\label{table:fw_loop_rates}
+\label{table:unbound_results}
 \end{tablehere}
 
 
