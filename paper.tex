@@ -27,6 +27,10 @@
 \usetikzlibrary{calc,positioning, fit, arrows}
 %\usepackage{biber}
 
+%for citing webcites
+\usepackage{cite}
+\usepackage{url}
+
 \makeatletter
 \newenvironment{tablehere}
   {\def\@captype{table}}
@@ -75,26 +79,26 @@ Currently, there are numerous multirotor UAVs that are available commercially an
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 
-\begin{itemize}
-	\item{This paper looks at the why and how we are going to optimize a multirotor platform to maximize flight time.}
-	\item{Talk about how the variables that are going to be optimized are rotor radius, fuel consumption rate, number of blade per rotor, number of rotors, rotor speed, and rotor pitch.}
-	\item{Talk about why these variables were selected as design variables.}
-	\item{Talk about some physical constraints, especially those imposed by the FAA.}
-\end{itemize}
+The creation of a multirotor aircaft capable of both carrying a relatively large payload and flying for a long duration would be very desirable fo many applications.
 
+Designing a gas powered multirotor aircraft requires several design decisions. When considering the total flight time of a the aircraft, foremost of these design decisions are the choice of rotor, engine and gas tank size.  These, and other, trade-offs are hard for a designer to simultaneously consider. 
+
+This paper presents analysis and optimization methods for designing a gas powered multirotor aircraft.  The analysis focuses on modeling the engine and aerodynamic components with a limited consideration of aircraft structure.  These analyses are then used within multi-dimensional optimization to produce a vehicle design capable of long duration flight. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Background}
 
-Incorporating a gas powered engine into a multirotor requires more then just exchanging the electric motors and batteries for an engine and a gas tank respectively. The control of such a vehicle would also fundamentally change.  Electric multirotors are controlled by spinning the rotors faster at slower to produce varying thrust and torque. Gas engines are unable to rev up as fast as electric motors meaning a fixed speed and variable pitch propeller is better suited for a gas powered vehicle.
+Multirotor aircraft are useful for a variety of applications.  Because multirotors aircraft can fly vertically they do not required landing strips.  They can carry sensor equipment for scientific or surveillance purposes. Multirotor use in package delivery is being studied by several large companies such as Google, Amazon and DHL \cite{Amazon2014}.   
+
+Incorporating a gas powered engine into a multirotor requires more then just exchanging the electric motors and batteries for an engine and a gas tank respectively. The control of such a vehicle would also fundamentally change.  Electric multirotors are controlled by varying propeller rotational speed to produce varying thrust and torque. Gas engines lack the ability to vary speed quickly enough to control the attitude of a multirotor aircraft. This means a fixed speed and variable pitch propeller is better suited for a gas powered vehicle.
 
 Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a small, electric variable pitch quad commercially available \cite{stingray2016}.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}.
 
 In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a relatively large payload. 
 
-There are many commercially available parts for a gas quad, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However a gas powered multirotor would required a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
+There are many commercially available parts for a gas quad, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However, a gas powered multirotor would required a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
 
-FAA requirements...
+FAA requirements \cite{faa2016} specify that model aircraft must weigh less then 55 lbs (25 kg) or else they require special airworthiness certificates.
 
 \section{MOTIVATION}
 
