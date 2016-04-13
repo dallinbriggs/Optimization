@@ -71,7 +71,7 @@ Multi-dimensional Optimization of Gasoline-fueled Variable Pitch Multirotor Airc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-Currently, there are numerous multirotor UAVs that are available commercially and to consumers that are capable of lifting small payloads for an endurance of approximately 30 minutes. While these current multirotors are good for short endurance missions, there are few options for larger, higher payload capacity multirotors that are able to maintain flight for longer than an hour. This paper describes the optimization process used to develop a multirotor platform that maximizes the flight time of a gasoline-fueled multirotor UAV by varying several design variables related to the power required and the aerodynamics of the model.
+Currently, there are numerous multirotor UAVs that are available commercially and to consumers that are capable of lifting small payloads for an endurance of approximately 30 minutes or less. While these current multirotors are good for short endurance missions, there are few options for larger, higher payload capacity multirotors that are able to maintain flight for longer than an hour. This paper describes the optimization process used to develop a multirotor platform that maximizes the flight time of a gasoline-fueled multirotor UAV by varying several design variables related to the power required and the aerodynamics of the model.
 
 \end{abstract}
 
@@ -86,41 +86,32 @@ Designing a gas powered multirotor aircraft requires several design decisions. W
 This paper presents analysis and optimization methods for designing a gas powered multirotor aircraft.  The analysis focuses on modeling the engine and aerodynamic components with a limited consideration of aircraft structure.  These analyses are then used within multi-dimensional optimization to produce a vehicle design capable of long duration flight. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Background}
+\section{BACKGROUND}
 
 Multirotor aircraft are useful for a variety of applications.  Because multirotors aircraft can fly vertically they do not required landing strips.  They can carry sensor equipment for scientific or surveillance purposes. Multirotor use in package delivery is being studied by several large companies such as Google, Amazon and DHL \cite{Amazon2014}.   
 
 Incorporating a gas powered engine into a multirotor requires more then just exchanging the electric motors and batteries for an engine and a gas tank respectively. The control of such a vehicle would also fundamentally change.  Electric multirotors are controlled by varying propeller rotational speed to produce varying thrust and torque. Gas engines lack the ability to vary speed quickly enough to control the attitude of a multirotor aircraft. This means a fixed speed and variable pitch propeller is better suited for a gas powered vehicle.
 
-Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a small, electric variable pitch quad commercially available \cite{stingray2016}.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}.
+Variable pitch mulitrotor aircraft are not as common as variable speed multirotors but they have been explored to some degree. Control of variable pitch multirotor aircraft was studied by Cutler \cite{Cutler2012}. There is a small, electric variable pitch quadcopter commercially available \cite{stingray2016} for performing stunts and 3D maneuvers.  There are also several hobbyist attempts at gas powered variable pitch quads \cite{diy2016}, \cite{hackaday2016}. In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a relatively large payload. 
 
-In our knowledge there has been no attempt to use a gas powered variable pitch quad to maximize the flight time for carrying a relatively large payload. 
-
-There are many commercially available parts for a gas quad, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However, a gas powered multirotor would required a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
+There are many commercially available parts that could be used to create a gas powered multirotor, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However, a gas powered multirotor would required a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
 
 FAA requirements \cite{faa2016} specify that model aircraft must weigh less then 55 lbs (25 kg) or else they require special airworthiness certificates.
 
 \section{MOTIVATION}
 
-Nearly all commercial and consumer multirotor UAVs are powered by lithium-polymer batteries because of their high energy capacity to weight ratios. Although these batteries are very useful and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for lithium-polymer batteries is up to 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potentially fly much longer than a battery powered vehicle because it can carry more energy.  
-
-The gass powered quadcopter will have variable pitch propellers would be  
-\begin{itemize}
-	\item{Will talk more about some of the details using a gas engine entails in the paper.}
-	\item{Speak briefly on the reasons for requiring variable pitch with a gas engine.} 
-	\item{Speak on current platforms and capabilities and explain how this could fundamentally change the way multirotors are used in commercial applications, but not really for consumers.}
-\end{itemize}
-
+Nearly all commercial and consumer multirotor UAVs are powered by lithium-polymer batteries because of their relatively high energy capacity to weight ratios. Although these batteries are very useful and reliable, they still offer much lower specific energy ratios then that of liquid fuels such as gasoline. The average specific energy for lithium-polymer batteries is approximately 0.95 MJ/kg, where gasoline is 46.4 MJ/kg. This means that a gasoline-fueled multirotor can potentially fly much longer than a battery powered vehicle because it can carry more energy.  %Is there a refernce for these numbers???
 
 \begin{figurehere}
 	\begin{center}
-		\includegraphics[width=.40\textwidth]{current_capabilities.png}
-		\caption{\textit{Graphic showing current platforms and how our would be better.}}
-		\label{current_cap}
+		\includegraphics[width=.5\textwidth]{current_capabilities.png}
+		\caption{\textit{Graphic showing capabilities of current platforms and the goal of this project.}} %This data probably needs a reference !!!!
+		\label{fig:current_cap}
 	\end{center}
 \end{figurehere}
 
-	
+The goal of this project is to expand the flight envelope of multirotor aircraft.  Figure~\ref{fig:current_cap} demonstrates the current capabilities of consumer and commercial multirotors and depicted the goal of this project.  We believe that a multirotor that could carry larger payloads for longer periods of time would greatly expand the type and number of applications for these vehicles. A multirotor with this capability would fundamentally change the way multirotors are used in commercial applications. 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
 
@@ -145,7 +136,7 @@ Data was also used to produce a model of the power output of the engine as a fun
 \end{figure}
 
 
-The engine efficiency was not modeled for this project and was assumed a constant parameter.  Within the analysis the shaft output power of the engine was 15\% of the power consumed from the fuel.  
+The engine efficiency was not modeled for this project and was assumed as a constant parameter.  Throughout the analysis, the shaft output power of the engine was 15\% of the power consumed from the fuel.  
 
 \subsection{Aerodynamics}
 
