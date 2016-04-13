@@ -142,7 +142,7 @@ The engine efficiency was not modeled for this project and was assumed as a cons
 
 Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks. Since each rotor will be designed using small-scale helicopter components that consist of variable-pitch rotors that have no twist, a simplified helicopter rotor aerodynamic model should be sufficient for these calculations. 
 
-Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods, rather than the complex aerodynamics of the system, several simplifications were made in analyzing the inflow angle and the down-wind air interactions of the propeller. Also, the model used assumes the multirotor is in a hover, since that seems to be the primary use of multirotor aircraft.
+Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods, rather than the complex aerodynamic interactions of the system, several simplifications were made in analyzing the inflow angle and the down-wind air interactions of the propeller. Also, the model used assumes the multirotor is in hover, since that seems to be the primary use condition of multirotor aircraft.
 
 Combined differential blade element and momentum theory for nonuniform inflow was used to calculate the thrust and the torque differentially across each rotor blade \cite{bramwell2001bramwell}. Using blade element theory, the differential thrust is given by
 
@@ -151,7 +151,7 @@ Combined differential blade element and momentum theory for nonuniform inflow wa
 	\label{thrust_eqn}
 \end{equation}
 
-where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor, $T_{prod}$ can then be calculated by multiplying the blade thrust by the number of \textit{N} rotors. 
+where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor, $T_{prod}$ can then be calculated by multiplying the rotor thrust by the number of \textit{N} rotors. 
 
 The differential torque for each rotor blade is given by
 
@@ -160,7 +160,7 @@ The differential torque for each rotor blade is given by
 	\label{torque_eqn}
 \end{equation}
 
-where $\delta$ is the local blade drag coefficient, and $C_L$ is the lift coefficient. The total torque for the multirotor , $Q_{req}$, can be found using the same method for calculating the thrust. 
+where $\delta$ is the local blade drag coefficient, and $C_L$ is the lift coefficient. The total torque for the multirotor , $Q_{req}$, can be found using the same method for calculating the total thrust. 
 
 The differential power produced by each rotor is then given by 
 
@@ -169,13 +169,13 @@ The differential power produced by each rotor is then given by
 	\label{power_eqn}
 \end{equation}
 
-and the total power required by the rotors, $P_{req}$, can be calculated using the same method as thrust and torque. 
+and the total power required by the rotors, $P_{req}$, can be calculated using the same method as total thrust and torque \cite{venkatesan2014fundamentals}. 
 
-Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the Optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
+Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the Optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made initially, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
 
-Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. Data points for this airfoil were generated using Xfoil. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across the range of the angle of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
+Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. This airfoil approximately represents the airfoil of many commonly used remote control helicopters \cite{mettler2013identification}. Data points for this airfoil were generated using Xfoil, an aerodynamics tool developed by The Massachusetts Institute of Technology. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across a range of the angles of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
 
-Momentum theory allows for a relatively simple calculation of the inflow angle for each element of the blade. This calculation is an approximation, but it is sufficient for our lower fidelity model in designing the rotor system. The inflow angle is given by 
+Momentum theory allows for a relatively simple calculation of the inflow angle for each element of the blade. This calculation is an approximation, but it is sufficient for our low-fidelity model in designing the rotor system. The inflow angle is given by 
 
 \begin{equation}
 \phi^2 = (\frac{a\sigma}{8})(\theta-\phi),
@@ -186,12 +186,12 @@ where
 
 \[ \sigma = \frac{bc}{\pi r} \]
 
-is the blade solidity ratio based on local rotor radius, and \textit{b} is the number of blades in each ratio. 
+is the blade solidity ratio based on local rotor radius, and \textit{b} is the number of blades in each rotor. 
 
 
 \section{OPTIMIZATION}
 
-Within the optimization there are two sets of design variables.  First, the design variables that influence the size of the vehicle: the rotor radius $R_{rot}$, the engine size $S_{eng}$, and the fuel capacity $f_{capacity}$.  Then, there are the design variables that are used to determine feasibility of the design: fuel burn rate $f_{rate}$, rotor pitch angle $\theta_{pitch}$, and propeller head speed $\omega_{rot}$. Number of blades per rotor and number of rotors could also be treated as design variables. However, since the optimizer will often tent toward more rotors and adding more rotors would have unmodeled adverse affects on cost, complexity, and weight these variables are fixed as parameters in the analysis. Moving forward we will assume four sets of two blade rotors.
+Within the optimization there are two sets of design variables.  First, the design variables that influence the size of the vehicle: the rotor radius $R_{rot}$, the engine size $S_{eng}$, and the fuel capacity $f_{capacity}$.  Then, there are the design variables that are used to determine feasibility of the design: fuel burn rate $f_{rate}$, rotor pitch angle $\theta_{pitch}$, and propeller head speed $\omega_{rot}$. Number of blades per rotor and number of rotors were also initially treated as design variables. However, with the current aerodynamic model, the optimizer will create as many rotors with as many blades as possible to minimize the rotational speed required of each rotor to reduce the overall drag. Since adding more rotors would have un-modeled adverse affects on cost, complexity, and weight these variables are fixed as parameters in the analysis. Moving forward we will assume four sets of two blade rotors because this is a common configuration that would be reasonably simple to build.
 
 %The flight time of the vehicle is only directly proportional to two of the design variables: the fuel capacity $C_{fuel}$ and the fuel burn rate $r_{fuel}$.  Once the fuel is all burned then the vehicle must land.  Through the constraints imposed on the optimization the flight time becomes indirectly a function of the rest of the design variables.
 
@@ -205,11 +205,11 @@ We now setup the formal optimization problem
 	\label{eq:objective}
 \end{equation}
 
-Where flight time was calculated by 
+where flight time was calculated by 
 \[
 	t_{flight} = K_{energy}\frac{f_{capacity}}{f_{rate}}.
 \]
-Without constraints, the solution to maximizing flight time would be trivial to calculate as well as impossible to construct. Therefore to optimize the system we must use constraints that ensure the quad is feasible and legal, according to the FAA \cite{faa2016}. The constrains are on the power produced by the engine ($P_{shaft}$), power required by the prop ($P_{rot}$), thrust produced by the prop ($T_{prod}$), total weight of the vehicle ($W_{total}$) and maximum power capabilities of the engine ($P_{max}$). Where the following relationships hold
+Without constraints, the solution to maximizing flight time would be trivial to calculate as well as impossible to construct. Therefore to optimize the system we must use constraints that ensure the quad is feasible and legal, according to the FAA \cite{faa2016}. The constraints are on the power produced by the engine ($P_{shaft}$), power required by the rotors ($P_{rot}$), thrust produced by the rotors ($T_{prod}$), total weight of the vehicle ($W_{total}$) and maximum power capabilities of the engine ($P_{max}$). To use the constraints correctly, the following relationships must hold:
 
 \[
 	\begin{split}
@@ -222,9 +222,9 @@ Without constraints, the solution to maximizing flight time would be trivial to 
 
 The above aerodynamic model is used to calculate $P_{rot}$ and $T_{prod}$. $P_{shaft}$ is calculated from the fuel burn rate and engine efficiency. $W_{total}$ is the combined weight of the engine, vehicle frame, fuel, and payload. $P_max$ comes from the surrogate engine power model depicted in figure~\ref{fig:power}.
 
-The design variables were scaled for input in to the optimizer. The optimizers we used were the matlab's fmincon function using interior-point algorithm and the python pyoptsparse package using SNOPT algorithum. Gradients were found using auto-differentiation in Matlab and finite differencing in python. 
+The design variables were scaled for input in to the optimizer. The optimizers we used were the Matlab's \textit{fmincon} function using interior-point algorithm and the Python \textit{pyoptsparse} package using SNOPT algorithum. Gradients were found using automatic-differentiation in Matlab and finite-differencing in Python. 
 
-Our optimization found the maximum flight time given a payload, but another formulation would be to find the maximum payload given a specified flight time. This means we could create a Pareto frontier of this multi-objective optimization. However, to simplify we can create figure~\ref{fig:payload} by varying the payload parameter within our optimization (not a true Pareto frontier because payload was not specifically optimized). We then can further explore how the characteristics of a gas quad change as we optimize the flight time for different payloads. For example, figure~\ref{fig:eng_v_pl} shows how the optimal engine size changes as the payload parameter varies. 
+Our optimization algorithm found the maximum flight time given a payload, but another formulation would be to find the maximum payload given a specified flight time. This means we could create a Pareto frontier of this multi-objective optimization. However, to simplify we can create figure~\ref{fig:payload} by varying the payload parameter within our optimization (not a true Pareto frontier because payload was not specifically optimized). We then can further explore how the characteristics of a gas quad change as we optimize the flight time for different payloads. For example, figure~\ref{fig:eng_v_pl} shows how the optimal engine size changes as the payload parameter varies. 
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{pareto_front.png}
