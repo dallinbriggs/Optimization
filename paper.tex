@@ -242,7 +242,7 @@ Because the final design requires a single optimal solution and not a range of s
 
 \section{RESULTS AND DISCUSSION}
 
-When simultaneously optimizing with 3, 5, and 7 kg payloads our optimizer converges to an optimal solution. The solution flight time is at least 42.46 minutes with a payload less then 7 kg. The values of the optimal design variables can be seen in table~\ref{table:unbound_results}. 
+When simultaneously optimizing with 3, 5, and 7~kg payloads our optimizer converges to an optimal solution. The solution flight time is at least 42.46~minutes with a payload not greater than 7~kg. The values of the optimal design variables can be seen in table~\ref{table:unbound_results}. 
 
 \begin{tablehere}
 \centering
@@ -270,7 +270,11 @@ We also found that the solutions varied greatly with very small changes in our a
 
 \section{CONCLUSION}
 
-lots of really good conclusions
+We have demonstrated a optimization of a gas powered variable pitch multirotor aircraft capable of carrying relatively large payloads for long durations.  The optimization produced a design that is feasible according to our analysis.  The design can carry up to 7~kg for at least 42.5~minutes.  This result is far better then the current capability of vehicles on the market.
+
+The optimization analysis makes several assumptions and approximations that would need to be relaxed in order to better trust the solution.  Further the optimization chose a design from continuous variables when only discrete off-the-shelf choices are available. 
+
+Future work would include using better aerodynamic modeling and validation with testing, adding structural analysis to find the weight of the frame, and optimizing under uncertainty due to inaccuracies in analysis. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section*{APPENDIX}
