@@ -238,25 +238,32 @@ Our optimization algorithm found the maximum flight time given a payload, but an
 		\label{fig:eng_v_pl}
 \end{figure}
 
-Because our final design requires a single optimal solution and not a range of solutions that depend on our payload capacity we then simultaneously optimize over several payloads and optimize over all of then together.
+Because the final design requires a single optimal solution and not a range of solutions that depend on our payload capacity we then simultaneously optimize at several payloads. This means the optimization must maximize the total combined flight time while stratifying constraints for operating points.
 
 \section{RESULTS AND DISCUSSION}
 
-We have found that if the design variables are left unbound and all of the constraints are still being met, the maximum flight time could be 11.32 hours. The values of these design variables can be seen in table \ref{table:unbound_results}. 
+When simultaneously optimizing with 3, 5, and 7 kg payloads we get an optimal solution. The solution flight time is at least 42.46 minutes with a payload less then 7 kg. The values of the optimal design variables can be seen in table~\ref{table:unbound_results}. 
 
 \begin{tablehere}
 \centering
-\begin{tabulary}{0.5\textwidth}{|C|C|C|C|C|}
-\hline
-  \# of Blades & Rotor Radius & Rotor Speed & \# of Rotors \\ \hline
-  3 & 2.306 & 39 & 8 \\ \hline
-  Blade Pitch & Fuel Rate & Engine Size & Fuel Capacity \\ \hline
-  22 & 2.01e-4 & 11.31 & 12.77 \\ \hline
-\end{tabulary}
-\caption{Optimal design variables for loosely bound constraints. Rotor radius is in meters, rotor speed is in RPM, blade pitch is in degrees, fuel rate is in kg/s, engine size is in cc, fuel capacity is in liters.}
+\vspace{5mm}
+	\begin{tabulary}{0.5\textwidth}{|C|C|}
+		\hline
+		Design Variable & Optimal Value \\ \hline \hline
+		Rotor radius (m) & 2.156 \\ \hline
+		Engine size (cc) & 176.9 \\ \hline
+		Fuel Capacity (kg) & 6.45 \\ \hline
+		Fuel burn rate (g/s) & 1.898 \\ \hline
+		Rotor pitch (deg) & 17.6 \\ \hline
+		Head speed (rpm) & 135.1 \\ \hline
+	\end{tabulary}
+\caption{Optimal design variables for loosely bound constraints.}
 \label{table:unbound_results}
 \end{tablehere}
 
+The above solution is a vehicle with an unreasonably large slow moving propellers. While bounding our rotor size would give a more physically manageable solution, it would have also meant our optimization was largely an aerodynamic analysis with a small optimization of engine size. Leaving the variable loosely bounded gives more insight about the trade offs of the vehicle makes for efficiency. 
+
+We also found that the solutions varied greatly with very small changes in our aerodynamic analysis. Personal experience with RC aircraft lead us to believe that the head speed and pitch angles are too extreme. Further validation of our analysis would be required before a design such as this to be built. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
