@@ -173,7 +173,7 @@ and the total power required by the rotors, $P_{req}$, can be calculated using t
 
 Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the Optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made initially, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
 
-Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. This airfoil approximately represents the airfoil of many commonly used remote control helicopters \cite{mettler2013identification}. Data points for this airfoil were generated using Xfoil, an aerodynamics tool developed by The Massachusetts Institute of Technology. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across a range of the angles of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
+Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil (see \cite{abbott1959theory}) was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. This airfoil approximately represents the airfoil of many commonly used remote control helicopters \cite{mettler2013identification}. Data points for this airfoil were generated using Xfoil, an aerodynamics tool developed by The Massachusetts Institute of Technology. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across a range of the angles of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
 
 Momentum theory allows for a relatively simple calculation of the inflow angle for each element of the blade. This calculation is an approximation, but it is sufficient for our low-fidelity model in designing the rotor system. The inflow angle is given by 
 
@@ -228,7 +228,7 @@ Our optimization algorithm found the maximum flight time given a payload, but an
 
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{pareto_front.png}
-	\caption{Pareto fronter like curve found by optimizing for flight time given specified payloads.}
+	\caption{Pareto frontier-like curve found by optimizing for flight time given specified payloads.}
 		\label{fig:payload}
 \end{figure}
 
@@ -238,11 +238,11 @@ Our optimization algorithm found the maximum flight time given a payload, but an
 		\label{fig:eng_v_pl}
 \end{figure}
 
-Because the final design requires a single optimal solution and not a range of solutions that depend on our payload capacity we then simultaneously optimize at several payloads. This means the optimization must maximize the total combined flight time while stratifying constraints for operating points.
+Because the final design requires a single optimal solution and not a range of solutions that depend on our payload capacity, we then simultaneously optimized at several payloads. This means the optimization must maximize the total combined flight time while satisfying constraints for operating points.
 
 \section{RESULTS AND DISCUSSION}
 
-When simultaneously optimizing with 3, 5, and 7 kg payloads we get an optimal solution. The solution flight time is at least 42.46 minutes with a payload less then 7 kg. The values of the optimal design variables can be seen in table~\ref{table:unbound_results}. 
+When simultaneously optimizing with 3, 5, and 7 kg payloads our optimizer converges to an optimal solution. The solution flight time is at least 42.46 minutes with a payload less then 7 kg. The values of the optimal design variables can be seen in table~\ref{table:unbound_results}. 
 
 \begin{tablehere}
 \centering
@@ -261,9 +261,9 @@ When simultaneously optimizing with 3, 5, and 7 kg payloads we get an optimal so
 \label{table:unbound_results}
 \end{tablehere}
 
-The above solution is a vehicle with an unreasonably large slow moving propellers. While bounding our rotor size would give a more physically manageable solution, it would have also meant our optimization was largely an aerodynamic analysis with a small optimization of engine size. Leaving the variable loosely bounded gives more insight about the trade offs of the vehicle makes for efficiency. 
+The above solution is a vehicle with unreasonably large, slow moving propellers. While bounding our rotor size would give a more physically manageable solution, it would have also meant our optimization was largely an aerodynamic analysis with a small optimization of engine size. Leaving the variable loosely bounded gives more insight about the trade-offs the vehicle makes for efficiency. 
 
-We also found that the solutions varied greatly with very small changes in our aerodynamic analysis. Personal experience with RC aircraft lead us to believe that the head speed and pitch angles are too extreme. Further validation of our analysis would be required before a design such as this to be built. 
+We also found that the solutions varied greatly with very small changes in our aerodynamic analysis. Personal experience with RC aircraft leads us to believe that the head speed and pitch angles are too extreme. Further validation of our analysis would be required before a design such as this were to be built.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
