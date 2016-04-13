@@ -81,7 +81,7 @@ Currently, there are numerous multirotor unmanned aerial vehicles (UAVs) that ar
 
 The creation of a multirotor aircaft capable of both carrying a relatively large payload and flying for a long duration would be very desirable for many applications.
 
-Designing a gas powered multirotor aircraft requires several design decisions. When considering the total flight time of a the aircraft, foremost of these design decisions are the choices of rotor, engine and gas tank size.  These design decisions along with several other aircraft parameters all have trade-offs that makes it difficult for a designer to simultaneously consider which design choice will allow for the longest flight time and/or greatest payload capacity. 
+Designing a gas powered multirotor aircraft requires several design decisions. When considering the total flight time of the aircraft, foremost of these design decisions are the choices of rotor, engine and gas tank size.  These design decisions along with several other aircraft parameters all have trade-offs that makes it difficult for a designer to simultaneously consider which design choice will allow for the longest flight time and/or greatest payload capacity. 
 
 This paper presents analysis and optimization methods for designing a gas powered multirotor aircraft.  The analysis focuses on modeling the engine and aerodynamic components with a limited consideration of aircraft structure.  These analyses are then used within multi-dimensional optimization to produce a vehicle design capable of both long duration flight and lifting heavy payloads. 
 
@@ -94,7 +94,7 @@ Incorporating a gas powered engine into a multirotor requires more then just exc
 
 Variable pitch mulitrotor aircraft are not as common as variable speed multirotors but they have been explored to some degree. Control of variable pitch multirotor aircraft was studied by Cutler, et al. \cite{Cutler2012}\cite{Cutler2012a} and Segui-Gasco, et al. \cite{Segui-Gasco2014}. There is a small, electric variable pitch quadcopter commercially available \cite{stingray2016} for performing stunts and inverted maneuvers.  There are also several hobbyist attempts at gas powered variable pitch quad-rotors (quads) \cite{diy2016}, \cite{hackaday2016}. In our knowledge there has been no attempt to use a gas powered variable pitch multirotor to maximize the flight time for carrying a relatively large payload for commercial applications. 
 
-There are many commercially available components that could be used to create a gas powered multirotor, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However, a gas powered multirotor would required a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
+There are many commercially available components that could be used to create a gas powered multirotor, including engines \cite{da2016} and variable pitch helicopter propellers \cite{align2016}. However, a gas powered multirotor would require a custom frame for mounting the engine and supplying power from the engine to the individual rotors.
 
 Federal Aviation Administration (FAA) requirements \cite{faa2016} specify that model aircraft and UAVs of any sort must weigh less then 55 lbs (25 kg). UAVs or model aircraft weighing more than 55 lbs require special airworthiness certificates and are much more heavily regulated.
 
@@ -115,7 +115,7 @@ The goal of this project is to expand the flight envelope of multirotor aircraft
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODS}
 
-Because the quad is going to be built using commercially available off-the-shelf components, the optimization must be closely based on a realistic model. Therefore, the analysis must either be based on observations from available hardware or attempt to analyze the hardware in its available configurations.  The following sections present some surrogate models for approximating engine parameters as well as an aerodynamic analysis of common variable pitch RC propellers. 
+Because the quad is going to be built using commercially available off-the-shelf components, the optimization must be closely based on a realistic model. Therefore, the analysis must either be based on observations from available hardware or attempt to analyze the hardware in its available configurations.  The following sections present some surrogate models for approximating engine parameters as well as an aerodynamic analysis of common variable pitch propellers. 
 
 \subsection{Engine} 
 
@@ -142,7 +142,7 @@ The engine efficiency was not modeled for this project and was assumed as a cons
 
 Much of the work done in the methodology of optimizing flight time was to find adequate models for the thrust, torque, and power required from the main rotor disks. Since each rotor will be designed using small-scale helicopter components that consist of variable-pitch rotors that have no twist, a simplified helicopter rotor aerodynamic model should be sufficient for these calculations. 
 
-Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods, rather than the complex aerodynamic interactions of the system, several simplifications were made in analyzing the inflow angle and the down-wind air interactions of the propeller. Also, the model used assumes the multirotor is in hover, since that seems to be the primary use condition of multirotor aircraft.
+Many of the existing aerodynamic models used in the aerospace industry to represent helicopter rotors are extremely complex and require specialized software tools (many of which are proprietary). High fidelity aerodynamic models generally require lots of computational power; so in order to focus on optimization methods, rather than the complex aerodynamic interactions of the system, several simplifications were made in analyzing the inflow angle and the down-wind air-rotor interactions of the propeller. Also, the model used assumes the multirotor is in hover, since that seems to be the primary use condition of multirotor aircraft.
 
 Combined differential blade element and momentum theory for nonuniform inflow was used to calculate the thrust and the torque differentially across each rotor blade \cite{bramwell2001bramwell}. Using blade element theory, the differential thrust is given by
 
@@ -151,7 +151,7 @@ Combined differential blade element and momentum theory for nonuniform inflow wa
 	\label{thrust_eqn}
 \end{equation}
 
-where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor, $T_{prod}$ can then be calculated by multiplying the rotor thrust by the number of \textit{N} rotors. 
+where $\rho$ is the air density, \textit{a} is the lift-curve slope for the blade airfoil, $\Omega$ is the angular velocity of the rotors, \textit{r} is the radius of the annulus of the rotor being differentiated, $\theta$ is the blade pitch angle measured from the horizontal plane formed by the rotational disc of rotor blades, \textit{c} is the chord of the rotor, and $\phi = \tan^{-1}(U_p/U_T) $ is the inflow angle at the blade element. $U_P$ and $U_T$ are the components of air velocity relative to blade element perpendicular and tangential to the plane of rotation, respectively. The total thrust on each rotor is calculated by integrating equation \ref{thrust_eqn} across the rotor radius, \textit{R}. The total thrust for the multirotor, $T_{prod}$, can then be calculated by multiplying the rotor thrust by the number of \textit{N} rotors. 
 
 The differential torque for each rotor blade is given by
 
@@ -171,7 +171,7 @@ The differential power produced by each rotor is then given by
 
 and the total power required by the rotors, $P_{req}$, can be calculated using the same method as total thrust and torque \cite{venkatesan2014fundamentals}. 
 
-Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the Optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made initially, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
+Equations \ref{thrust_eqn}, \ref{torque_eqn} and \ref{power_eqn} are used in the constraints, as discussed in the optimization section. In practice, the thrust, torque, and power were integrated in a \textit{for loop} that divided each blade into 10 elements and then summed the differential values for each element. More divisions were made initially, but it greatly increased the computation time of the optimization algorithm and the results were approximately the same. 
 
 Since the goal of this project is to optimize the flight time of a multirotor and then build it using existing remote controlled aircraft components, a NACA 0012 airfoil (see \cite{abbott1959theory}) was used in the analysis for calculating the coefficient of lift, $C_L$, and the blade element drag coefficient, $\delta$. This airfoil approximately represents the airfoil of many commonly used remote control helicopters \cite{mettler2013identification}. Data points for this airfoil were generated using Xfoil, an aerodynamics tool developed by The Massachusetts Institute of Technology. This data was then fit with polynomials to approximately represent $C_L$ and $\delta$ across a range of the angles of attack, $\alpha$, continuously, where $\alpha = \theta - \phi$. 
 
@@ -218,7 +218,7 @@ Without constraints, the solution to maximizing flight time would be trivial to 
 	\end{split}
 \]
 
-The above aerodynamic model is used to calculate $P_{rot}$ and $T_{prod}$. $P_{shaft}$ is calculated from the fuel burn rate and engine efficiency. $W_{total}$ is the combined weight of the engine, vehicle frame, fuel, and payload. $P_max$ comes from the surrogate engine power model depicted in figure~\ref{fig:power}.
+The above aerodynamic model is used to calculate $P_{rot}$ and $T_{prod}$. $P_{shaft}$ is calculated from the fuel burn rate and engine efficiency. $W_{total}$ is the combined weight of the engine, vehicle frame, fuel, and payload. $P_{max}$ comes from the surrogate engine power model depicted in figure~\ref{fig:power}.
 
 The design variables were scaled for input in to the optimizer. The optimizers we used were the Matlab's \textit{fmincon} function using interior-point algorithm and the Python \textit{pyoptsparse} package using SNOPT algorithum. Gradients were found using automatic-differentiation in Matlab and finite-differencing in Python. 
 
